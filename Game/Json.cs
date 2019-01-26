@@ -13,7 +13,7 @@ namespace Game
 		});
 
 		public static JObject ToJson(this Result @object) => JObject.FromObject(@object);
-		public static JToken ToJson(this object @object) => JToken.FromObject(@object);
+		public static JToken ToJson<T>(this T value) => JToken.FromObject(value);
 		public static string Serialize(this object @object) => JsonConvert.SerializeObject(@object);
 	}
 }
