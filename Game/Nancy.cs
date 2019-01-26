@@ -17,11 +17,10 @@ namespace Game
 		public Nancy()
 		{
 			//Serve player's Webpage
-			Get["/"] = parameters =>
-			{
-				return Response.AsFile("www/index.html", "text/html");
-			};
+			Get["/"] = parameters => Response.AsFile("www/index.html", "text/html");
 
+
+			//Ajax
 			Get["/user/{id}/getCurrentEventId"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
@@ -31,8 +30,13 @@ namespace Game
 			Get["/user/{id}/getEventContent"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
-				var eventSerialized = Kevin.GetCurrentEvent(request.Id);
-				return JsonResponse(eventSerialized);
+				return JsonResponse(Kevin.GetCurrentEvent(request.Id));
+			};
+
+			Get["/user/{id}/getPlayer"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				return JsonResponse(Kevin.GetPlayer(request.Id));
 			};
 
 			Get["/user/{id}/getTestContent"] = value =>
