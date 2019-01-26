@@ -25,7 +25,7 @@ namespace Game
 			Get["/user/{id}/getCurrentEventId"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
-				return JsonResponse(Kevin.GetCurrentEvent(request.Id));
+				return JsonResponse(Kevin.GetCurrentEventId(request.Id));
 			};
 
 			Get["/user/{id}/getEventContent"] = value =>
