@@ -103,7 +103,7 @@
       });
     }
 
-    function FetchPlayerChoices() {
+    function GetCharactersChoices() {
       $.ajax({
         url: "/getCharacters",
         dataType: "jsonp",
@@ -112,7 +112,7 @@
           if (data.Success) {
             for (const key in data.Content) {
               const element = data.Content[key];
-              var newEle = "<li><h3>" + key + "</h3><br/>" + element + "<br/><button class=\"selectCharacter\">Select</button></li>";
+              var newEle = "<li><h3>" + key.Name + "</h3><br/>" + element.Description + "<br/><button class=\"selectCharacter\">Select</button></li>";
               $("#PlayerSelect ul").append(newEle);
             }
             $("button.selectCharacter").click(function(btn){
@@ -149,7 +149,7 @@
 
     $(document).ready(function () {
       //PlayerSelect
-      FetchPlayerChoices();
+      GetCharactersChoices();
 
 
       //Game
