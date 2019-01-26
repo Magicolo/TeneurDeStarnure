@@ -59,7 +59,7 @@
       });
     }
 
-    function FetchEventContent(){
+    function FetchEventContent() {
       $.ajax({
         url: "/user/1/getEventContent",
         dataType: "jsonp",
@@ -76,6 +76,7 @@
 
     $(document).ready(function () {
 
+      $("#sendButton").hide();
       FetchEventIdPlease();
       /*$.ajax({
         url: "/user/1/getTestContent",
@@ -100,6 +101,8 @@
             if (data.Success) {
               await ShowNode(data.Content.Script);
               ShowChoices(data.Content.Choices);
+              $("#sendButton").show("slow");
+
             }
           }
         });
@@ -117,7 +120,7 @@
   <div id="choices">
     <ul>
     </ul>
-    <button>Send</button><br><br>
+    <button id="sendButton">Send</button><br><br>
   </div>
 
 </body>
