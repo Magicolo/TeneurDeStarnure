@@ -68,6 +68,7 @@
           if (data.Success) {
             await ShowNode(data.Content.Script);
             ShowChoices(data.Content.Choices);
+              $("#sendButton").show("slow");
           }
         }
       });
