@@ -20,6 +20,10 @@ namespace Game
 			Get["/"] = parameters => Response.AsFile("www/index.html", "text/html");
 
 
+			//Player select
+			Get["/getCharacters"] = _ => JsonResponse(Kevin.GetCharacters());
+			Get["/GetNewPlayerId/{id}"] = parameters => JsonResponse(Kevin.GetNewPlayerId(parameters.id));
+
 			//Ajax
 			Get["/user/{id}/getCurrentEventId"] = value =>
 			{

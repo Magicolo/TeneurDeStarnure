@@ -8,7 +8,16 @@
     }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+
   <script>
+
+
+    var playerId = -1;
+    var eventId = "";
+
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -42,14 +51,13 @@
       var btns = $("#choices ul li");
       btns.hide();
       for (let i = 1; i <= btns.length; i++) {
-        var select = $("#choices ul li:nth-child("+i+")");
+        var select = $("#choices ul li:nth-child(" + i + ")");
         select.show(200);
         await sleep(200);
       }
 
     }
 
-    var eventId = "";
     async function EmptyContent() {
       $("#sendButton").hide(200);
       await sleep(200);
@@ -57,7 +65,7 @@
       await sleep(200);
       $("#output").hide(200);
       await sleep(300);
-    
+
       $("#choices ul").empty();
       $("#output").empty();
 
@@ -67,7 +75,7 @@
 
     function FetchEventIdPlease() {
       $.ajax({
-        url: "/user/1/getCurrentEventId",
+        url: "/user/"+playerId+"/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
           if (data.Success && data.Content != eventId) {
@@ -82,7 +90,7 @@
 
     function FetchEventContent() {
       $.ajax({
-        url: "/user/1/getEventContent",
+        url: "/user/"+playerId+"/getEventContent",
         dataType: "jsonp",
         success: async function (data) {
           //console.log(data);
@@ -95,10 +103,57 @@
       });
     }
 
+    function FetchPlayerChoices() {
+      $.ajax({
+        url: "/getCharacters",
+        dataType: "jsonp",
+        success: async function (data) {
+          console.log(data);
+          if (data.Success) {
+            for (const key in data.Content) {
+              const element = data.Content[key];
+              var newEle = "<li><h3>" + key + "</h3><br/>" + element + "<br/><button class=\"selectCharacter\">Select</button></li>";
+              $("#PlayerSelect ul").append(newEle);
+            }
+            $("button.selectCharacter").click(function(btn){
+              var name = $(btn.target).siblings("h3")[0].innerText;
+              SelectCharacter(name);
+            });
+          }
+        }
+      });
+    }
+
+    function SelectCharacter(name){
+      $.ajax({
+        url: "/GetNewPlayerId/" + name,
+        dataType: "jsonp",
+        success: async function (data) {
+          console.log(data);
+          if (data.Success) {
+            playerId = data.Content;
+            GoToGame();
+          }
+        }
+      });
+    }
+
+    async function GoToGame(){
+      $("#PlayerSelect").hide(100);
+      await sleep(100);
+      $("#GameScreen").show(500);
+
+      setInterval(FetchEventIdPlease, 500);
+    }
+
 
     $(document).ready(function () {
-      setInterval(FetchEventIdPlease, 500);
+      //PlayerSelect
+      FetchPlayerChoices();
 
+
+      //Game
+      $("#GameScreen").hide();
       $("#sendButton").hide();
 
       $("button").click(function () {
@@ -108,13 +163,6 @@
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
-            if (data.Success) {
-              /*
-              await ShowNode(data.Content.Script);
-              ShowChoices(data.Content.Choices);
-              $("#sendButton").show("slow");
-              */
-            }
           }
         });
       });
@@ -125,13 +173,24 @@
   </script>
 </head>
 
-<body>
 
-  <div id="output"></div>
-  <div id="choices">
+
+
+
+<body>
+  <div id="PlayerSelect">
     <ul>
+
     </ul>
-    <button id="sendButton">Send</button><br><br>
+  </div>
+
+  <div id="GameScreen">
+    <div id="output"></div>
+    <div id="choices">
+      <ul>
+      </ul>
+      <button id="sendButton">Send</button><br><br>
+    </div>
   </div>
 
 </body>
