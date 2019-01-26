@@ -24,7 +24,7 @@ namespace Game
 		public static Node Sequence(this IEnumerable<Node> nodes) => Node.Sequence(nodes.ToArray());
 	}
 
-	public readonly struct Node
+	public sealed class Node
 	{
 		public static Node Text(char value) => Text(value.ToString());
 		public static Node Text(string value) => new Node(
