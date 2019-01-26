@@ -3,7 +3,7 @@
 
 <head>
   <style>
-    ul{
+    ul {
       list-style: none;
     }
   </style>
@@ -22,7 +22,7 @@
           $("#output").append("<br/>");
           break;
         case "Delay":
-          await sleep(node.Time*1000);
+          await sleep(node.Time * 1000);
           break;
         case "Sequence":
           for (let i = 0; i < node.Children.length; i++) {
@@ -33,11 +33,11 @@
       }
     }
 
-    function ShowChoices(choices){
+    function ShowChoices(choices) {
       $("#choices ul").html();
       console.log(choices);
-      choices.forEach(function(choice){
-        choice = "<li> <input type=\"radio\" name=\"choice\" value=\"1\">"+choice.Label+"</li>";
+      choices.forEach(function (choice) {
+        choice = "<li> <input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</li>";
         $("#choices ul").append(choice);
       });
     }
@@ -56,18 +56,22 @@
         }
       });
 
-      
-      $.ajax({
-        url: "/user/1/answer/test",
-        dataType: "jsonp",
-        success: async function (data) {
-          console.log(data);
-          if (data.Success) {
-            await ShowNode(data.Content.Script);
-            ShowChoices(data.Content.Choices);
+
+      $("button").click(function () {
+        var choiceId = $("input:radio:checked")[0].value;
+        $.ajax({
+          url: "/user/1/answer/" + choiceId,
+          dataType: "jsonp",
+          success: async function (data) {
+            console.log(data);
+            if (data.Success) {
+              await ShowNode(data.Content.Script);
+              ShowChoices(data.Content.Choices);
+            }
           }
-        }
+        });
       });
+
 
 
     });

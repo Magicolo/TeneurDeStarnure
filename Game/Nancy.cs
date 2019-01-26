@@ -48,7 +48,7 @@ namespace Game
 			{
 				var request = this.Bind<RequestObject>();
 				Console.WriteLine($"Receiving answer {request.AnswerId} from {request.Id}");
-				var answer = Kevin.HandleAnswer(request.Id, request.AnswerId);
+				var answer = Kevin.ChooseEventChoice(request.Id, request.AnswerId);
 				return JsonResponse(answer);
 			};
 
