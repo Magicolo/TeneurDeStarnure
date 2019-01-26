@@ -13,7 +13,7 @@ namespace Game
 			return replace(new Node(node.Data, node.Build, children));
 		}
 
-		public static Node Typewrite(this Node node, float speed) => speed <= 0f ? node : node.Replace(child =>
+		public static Node Typewrite(this Node node, float speed = 10) => speed <= 0f ? node : node.Replace(child =>
 			child.Data is Data.Text data ?
 			data.Value
 				.Select(character => new Node(new Data.Text { Value = character.ToString() }, child.Build, child.Children))
@@ -24,7 +24,7 @@ namespace Game
 		public static Node Sequence(this IEnumerable<Node> nodes) => Node.Sequence(nodes.ToArray());
 	}
 
-	public readonly struct Node
+	public sealed class Node
 	{
 		public static Node Text(char value) => Text(value.ToString());
 		public static Node Text(string value) => new Node(

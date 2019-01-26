@@ -2,36 +2,62 @@
 using Nancy.ModelBinding;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Game
 {
 	public class RequestObject
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
+		public string AnswerId { get; set; }
 	}
 
 	public class Nancy : NancyModule
 	{
 		public Nancy()
 		{
+			//Serve player's Webpage
 			Get["/"] = parameters =>
 			{
 				return Response.AsFile("www/index.html", "text/html");
 			};
 
-			Get["/Kwame/{id}"] = value =>
+			Get["/user/{id}/getCurrentEventId"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
-				return JsonResponse("{ type: \"text\", text: \"just kidding"+ (request.Id + 1)+"\" }");
-				//return "bong " + (request.Id + 1);
+				return JsonResponse(Kevin.GetCurrentEventId(request.Id));
 			};
-			
+
+			Get["/user/{id}/getEventContent"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				var eventSerialized = Kevin.GetCurrentEvent(request.Id);
+				return JsonResponse(eventSerialized);
+			};
+
+			Get["/user/{id}/getTestContent"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				return JsonResponse(Kevin.GetTestContent());
+			};
+
+
+			//answer
+			Get["/user/{id}/answer/{answerId}"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				Console.WriteLine($"Receiving answer {request.AnswerId} from {request.Id}");
+				var answer = Kevin.ChooseEventChoice(request.Id, request.AnswerId);
+				return JsonResponse(answer);
+			};
+
 		}
 
-		public Response JsonResponse(string jsonString) {
-			byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+		public Response JsonResponse(Result result) => JsonResponse(result.Serialize());
+
+		public Response JsonResponse(string jsonString)
+		{
+			var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
 			return new Response()
 			{
 				StatusCode = HttpStatusCode.OK,

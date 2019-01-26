@@ -2,41 +2,127 @@
 <html>
 
 <head>
+  <style>
+    ul {
+      list-style: none;
+    }
+  </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script>
-    $(document).ready(function () {
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-      
+    async function ShowNode(node) {
+      switch (node.Type) {
+        case "Text":
+          $("#output").append(node.Value);
+          break;
+        case "Break":
+          $("#output").append("<br/>");
+          break;
+        case "Delay":
+          await sleep(node.Time * 1000);
+          break;
+        case "Sequence":
+          for (let i = 0; i < node.Children.length; i++) {
+            const element = node.Children[i];
+            await ShowNode(element);
+          }
+          break;
+      }
+    }
 
-      $("button").click(function () {
-        $.ajax({
-        url: "/Kwame/2",
+    function ShowChoices(choices) {
+      $("#choices ul").html();
+      //console.log(choices);
+      choices.forEach(function (choice) {
+        choice = "<li> <input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</li>";
+        $("#choices ul").append(choice);
+      });
+    }
+
+    var eventId = "";
+
+    function FetchEventIdPlease() {
+      $.ajax({
+        url: "/user/1/getCurrentEventId",
         dataType: "jsonp",
-        success: function (data) {
-          if(data.type == "text")
-            $("#output").html(data.text);
+        success: async function (data) {
+          console.log(data);
+          if (data.Success && data.Content != eventId) {
+            console.log("Event changed from " + eventId + " to " + data.Content);
+            eventId = data.Content;
+            FetchEventContent();
+          }
         }
       });
-      
-        $("#div1").fadeToggle();
-        $("#div2").fadeToggle("slow");
-        $("#div3").fadeToggle(3000);
+    }
+
+    function FetchEventContent() {
+      $.ajax({
+        url: "/user/1/getEventContent",
+        dataType: "jsonp",
+        success: async function (data) {
+          //console.log(data);
+          if (data.Success) {
+            await ShowNode(data.Content.Script);
+            ShowChoices(data.Content.Choices);
+              $("#sendButton").show("slow");
+          }
+        }
       });
+    }
+
+
+    $(document).ready(function () {
+
+      $("#sendButton").hide();
+      FetchEventIdPlease();
+      /*$.ajax({
+        url: "/user/1/getTestContent",
+        dataType: "jsonp",
+        success: async function (data) {
+          //console.log(data);
+          if (data.Success) {
+            await ShowNode(data.Content.Script);
+            ShowChoices(data.Content.Choices);
+          }
+        }
+      });*/
+
+
+      $("button").click(function () {
+        var choiceId = $("input:radio:checked")[0].value;
+        $.ajax({
+          url: "/user/1/answer/" + choiceId,
+          dataType: "jsonp",
+          success: async function (data) {
+            console.log(data);
+            if (data.Success) {
+              await ShowNode(data.Content.Script);
+              ShowChoices(data.Content.Choices);
+              $("#sendButton").show("slow");
+
+            }
+          }
+        });
+      });
+
+
+
     });
   </script>
 </head>
 
 <body>
 
-  <p>Demonstrate fadeToggle() with different speed parameters.</p>
-
-  <button>Click to fade in/out boxes</button><br><br>
   <div id="output"></div>
-  <div id="div1" style="width:80px;height:80px;background-color:red;"></div>
-  <br>
-  <div id="div2" style="width:80px;height:80px;background-color:green;"></div>
-  <br>
-  <div id="div3" style="width:80px;height:80px;background-color:blue;"></div>
+  <div id="choices">
+    <ul>
+    </ul>
+    <button id="sendButton">Send</button><br><br>
+  </div>
 
 </body>
 
