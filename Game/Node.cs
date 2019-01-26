@@ -13,7 +13,7 @@ namespace Game
 			return replace(new Node(node.Data, node.Build, children));
 		}
 
-		public static Node Typewrite(this Node node, float speed = 10) => speed <= 0f ? node : node.Replace(child =>
+		public static Node Typewrite(this Node node, float speed = 50f) => speed <= 0f ? node : node.Replace(child =>
 			child.Data is Data.Text data ?
 			data.Value
 				.Select(character => new Node(new Data.Text { Value = character.ToString() }, child.Build, child.Children))
