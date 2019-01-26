@@ -7,7 +7,7 @@ namespace Game
 		public readonly JToken Content;
 		public readonly bool Success;
 
-		public Result(string content, bool success)
+		public Result(JToken content, bool success)
 		{
 			Content = content;
 			Success = success;
