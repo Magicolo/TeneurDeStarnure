@@ -9,25 +9,49 @@ namespace Game
 {
 	public class RequestObject
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
+		public string AnswerId { get; set; }
 	}
 
 	public class Nancy : NancyModule
 	{
 		public Nancy()
 		{
+			//Serve player's Webpage
 			Get["/"] = parameters =>
 			{
 				return Response.AsFile("www/index.html", "text/html");
 			};
 
-			Get["/Kwame/{id}"] = value =>
+			Get["/user/{id}/getCurrentEventId"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
-				return JsonResponse("{ type: \"text\", text: \"just kidding"+ (request.Id + 1)+"\" }");
-				//return "bong " + (request.Id + 1);
+				var currentEventID = Kevin.GetCurrentEvent(request.Id);
+				return JsonResponse("{ CurrentEventId: \"" + currentEventID + "\" }");
 			};
-			
+
+			Get["/user/{id}/getEventContent"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				var eventSerialized = Kevin.GetCurrentEvent(request.Id);
+				return JsonResponse(eventSerialized);
+			};
+
+			Get["/user/{id}/getTestContent"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				return JsonResponse(Kevin.GetTestContent());
+			};
+
+
+			//answer
+			Get["/user/{id}/answer/{answerId}"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				var answer = Kevin.HandleAnswer(request.Id, request.AnswerId);
+				return JsonResponse(answer);
+			};
+
 		}
 
 		public Response JsonResponse(string jsonString) {
