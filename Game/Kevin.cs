@@ -20,36 +20,42 @@ namespace Game
 			new Character
 			{
 				Identifier = Characters.Earth,
+				Name = "Earth",
 				Description = "Eat vegetables and carrots also.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
 				Identifier = Characters.Fire,
+				Name = "Fire",
 				Description = "All you need is wood and particle systems.",
 				Objective = "Hail to you."
 			},
 			new Character
 			{
 				Identifier = Characters.Lau,
+				Name = "Lau",
 				Description = "He-Lau to you.",
 				Objective = "Make a friend."
 			},
 			new Character
 			{
 				Identifier = Characters.Metal,
+				Name = "Metal",
 				Description = "Clunk clunk clunk.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
 				Identifier = Characters.Water,
+				Name = "Water",
 				Description = "Falls from the sky, drinks your soup.",
 				Objective = "Rain."
 			},
 			new Character
 			{
 				Identifier = Characters.Wood,
+				Name = "Wood",
 				Description = "No fire here please.",
 				Objective = "... there is no objective... or is there..."
 			}

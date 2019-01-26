@@ -47,6 +47,7 @@ namespace Game
 	public sealed class Character
 	{
 		public Characters Identifier;
+		public string Name;
 		public string Description;
 		public string Objective;
 	}
