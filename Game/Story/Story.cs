@@ -16,10 +16,44 @@ namespace Game
 
 		public static readonly Event EnterThePyramid = new Event(
 			nameof(EnterThePyramid),
-			Sequence(),
-			("Look left", ""));
+			Sequence(
+				Line("You try to enter the pyramid, but a strange force prevents you from going in.")
+			)
+			.Typewrite(),
+			("Look left", nameof(NoticeSuspiciousBush)),
+			("Run away", nameof(RunAwayFromThePyramid)),
+			("Knock on the door", nameof(KnockOnThePyramidDoor)));
 
-		public static readonly Event RunAwayFromThePyramid;
-		public static readonly Event KnockOnThePyramidDoor;
+		public static readonly Event RunAwayFromThePyramid = new Event(
+			nameof(RunAwayFromThePyramid),
+			Sequence(),
+			("Go back to the pyramid", nameof(ApproachThePyramid)));
+
+		public static readonly Event KnockOnThePyramidDoor = new Event(
+			nameof(KnockOnThePyramidDoor),
+			Sequence(
+				Line("You knock on the door of the pyramid...."),
+				Delay(2f),
+				Line("But nothing happens."))
+			.Typewrite(),
+			("Run away", nameof(RunAwayFromThePyramid)),
+			("Look left", nameof(NoticeSuspiciousBush)));
+
+		public static readonly Event NoticeSuspiciousBush = new Event(
+			nameof(NoticeSuspiciousBush),
+			Sequence(
+				Line("You notice a suspicious bush.")
+			)
+			.Typewrite(),
+			("Run away", nameof(RunAwayFromThePyramid)),
+			("Approach the bush", nameof(RunAwayFromThePyramid)));
+
+		public static readonly Event ApproachTheBush = new Event(
+			nameof(ApproachTheBush),
+			Sequence(
+				Line("You approach the bush."),
+				Line("It is a pretty normal bush...."))
+			.Typewrite(),
+			("Go back to the pyramid", nameof(ApproachThePyramid)));
 	}
 }
