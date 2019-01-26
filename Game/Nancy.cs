@@ -1,5 +1,6 @@
 ﻿using Nancy;
 using Nancy.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -46,6 +47,7 @@ namespace Game
 			Get["/user/{id}/answer/{answerId}"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
+				Console.WriteLine($"Receiving answer {request.AnswerId} from {request.Id}");
 				var answer = Kevin.HandleAnswer(request.Id, request.AnswerId);
 				return JsonResponse(answer);
 			};
