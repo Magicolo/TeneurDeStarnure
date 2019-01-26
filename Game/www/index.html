@@ -35,26 +35,59 @@
 
     function ShowChoices(choices) {
       $("#choices ul").html();
-      console.log(choices);
+      //console.log(choices);
       choices.forEach(function (choice) {
         choice = "<li> <input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</li>";
         $("#choices ul").append(choice);
       });
     }
 
-    $(document).ready(function () {
+    var eventId = "";
 
+    function FetchEventIdPlease() {
       $.ajax({
-        url: "/user/1/getTestContent",
+        url: "/user/1/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
           console.log(data);
+          if (data.Success && data.Content != eventId) {
+            console.log("Event changed from " + eventId + " to " + data.Content);
+            eventId = data.Content;
+            FetchEventContent();
+          }
+        }
+      });
+    }
+
+    function FetchEventContent(){
+      $.ajax({
+        url: "/user/1/getEventContent",
+        dataType: "jsonp",
+        success: async function (data) {
+          //console.log(data);
           if (data.Success) {
             await ShowNode(data.Content.Script);
             ShowChoices(data.Content.Choices);
           }
         }
       });
+    }
+
+
+    $(document).ready(function () {
+
+      FetchEventIdPlease();
+      /*$.ajax({
+        url: "/user/1/getTestContent",
+        dataType: "jsonp",
+        success: async function (data) {
+          //console.log(data);
+          if (data.Success) {
+            await ShowNode(data.Content.Script);
+            ShowChoices(data.Content.Choices);
+          }
+        }
+      });*/
 
 
       $("button").click(function () {
