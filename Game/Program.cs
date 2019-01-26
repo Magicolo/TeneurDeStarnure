@@ -10,15 +10,18 @@ namespace Game
 {
 	class Program
 	{
+		private static string _url = "http://localhost";
+		private static int _port = 6114;
 		static void Main(string[] args)
 		{
 			HostConfiguration hostConfigs = new HostConfiguration();
-			//hostConfigs.UrlReservations.CreateAutomatically = true;
+			hostConfigs.UrlReservations.CreateAutomatically = true;
 			hostConfigs.RewriteLocalhost = true;
-			using (var host = new NancyHost(new Uri("http://localhost:6112"), new DefaultNancyBootstrapper(), hostConfigs))
+			var uri = new Uri($"{_url}:{_port}/");
+			using (var host = new NancyHost(uri, new DefaultNancyBootstrapper(), hostConfigs))
 			{
 				host.Start();
-				Console.WriteLine("Running on http://192.168.1.203:8080");
+				Console.WriteLine($"Started listennig port {_port}");
 				Console.ReadLine();
 			}
 		}
