@@ -10,11 +10,12 @@
 
       $("button").click(function () {
         $.ajax({
-        url: "/Kwame/2",
+        url: "/user/2/getTestContent",
         dataType: "jsonp",
         success: function (data) {
-          if(data.type == "text")
-            $("#output").html(data.text);
+          console.log(data);
+          //if(data.type == "text")
+          //  $("#output").html(data.text);
         }
       });
       
