@@ -7,11 +7,11 @@ namespace Game
 	{
 		All = ~0,
 		Lau = 1 << 0,
-		Fire = 1 << 1,
-		Water = 1 << 2,
-		Metal = 1 << 3,
-		Earth = 1 << 4,
-		Wood = 1 << 5
+		Mom = 1 << 1,
+		Dad = 1 << 2,
+		Dog = 1 << 3,
+		Sis = 1 << 4,
+		Pal = 1 << 5
 	}
 
 	public sealed class Choice

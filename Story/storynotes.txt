@@ -4,3 +4,41 @@ Je ne sais pas trop
 
 
 _Why Today?_
+
+What does home mean to you?
+
+What's interesting about this guy? 
+
+
+-Discover the dark secrets of a crazy murderer who has hidden body parts all over the house
+-Explore the house, life, and thoughts of a depressed shut-in
+-Go through the thoughts and feelings of a post-op trans person
+-
+
+
+
+
+DIVERSIFIERS TO USE
+
+-Power of Community (community matters)
+-Forgive and Fortify (forgiveness as a main theme)
+-Always Room For One More (players can join any time)
+-Use the Source, Luke (open-source tools/libraries)
+-Party Maker (except we won't use AirConsole)
+
+-Keep it Simple (Playable with 2 buttons + DPad)
+
+-Mind Over Matter (voice narration)
+
+-Assetless (no visual assets)
+-Under the Hood (code is visible in game)
+
+-Super Secret Stash (Secret room in the game)
+//-This is where we came in, right? (Looping game, random starting point)
+//-In a Webpage (looks like a normal webpage)
+
+-Meanwhile (takes place in the backdrop of a more significant story)
+-Wanderlust (awaken interest in travel and visiting new places)
+-Russell's Teapot (Try to prove something unprovable)
+-20-XIX (19th-century prose)
+-The Ancient Folk (Include ancient traditions and locations of a community)
