@@ -33,26 +33,47 @@
       }
     }
 
-    function ShowChoices(choices) {
-      $("#choices ul").html();
+    async function ShowChoices(choices) {
       //console.log(choices);
       choices.forEach(function (choice) {
-        choice = "<li> <input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</li>";
+        choice = "<li> <label><input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</label></li>";
         $("#choices ul").append(choice);
       });
+      var btns = $("#choices ul li");
+      btns.hide();
+      for (let i = 1; i <= btns.length; i++) {
+        var select = $("#choices ul li:nth-child("+i+")");
+        select.show(200);
+        await sleep(200);
+      }
+
     }
 
     var eventId = "";
+    async function EmptyContent() {
+      $("#sendButton").hide(200);
+      await sleep(200);
+      $("#choices ul").hide(200)
+      await sleep(200);
+      $("#output").hide(200);
+      await sleep(300);
+    
+      $("#choices ul").empty();
+      $("#output").empty();
+
+      $("#choices ul").show();
+      $("#output").show();
+    }
 
     function FetchEventIdPlease() {
       $.ajax({
         url: "/user/1/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
-          console.log(data);
           if (data.Success && data.Content != eventId) {
             console.log("Event changed from " + eventId + " to " + data.Content);
             eventId = data.Content;
+            await EmptyContent();
             FetchEventContent();
           }
         }
@@ -67,8 +88,8 @@
           //console.log(data);
           if (data.Success) {
             await ShowNode(data.Content.Script);
-            ShowChoices(data.Content.Choices);
-              $("#sendButton").show("slow");
+            await ShowChoices(data.Content.Choices);
+            $("#sendButton").show("slow");
           }
         }
       });
@@ -76,21 +97,9 @@
 
 
     $(document).ready(function () {
+      setInterval(FetchEventIdPlease, 500);
 
       $("#sendButton").hide();
-      FetchEventIdPlease();
-      /*$.ajax({
-        url: "/user/1/getTestContent",
-        dataType: "jsonp",
-        success: async function (data) {
-          //console.log(data);
-          if (data.Success) {
-            await ShowNode(data.Content.Script);
-            ShowChoices(data.Content.Choices);
-          }
-        }
-      });*/
-
 
       $("button").click(function () {
         var choiceId = $("input:radio:checked")[0].value;
@@ -100,10 +109,11 @@
           success: async function (data) {
             console.log(data);
             if (data.Success) {
+              /*
               await ShowNode(data.Content.Script);
               ShowChoices(data.Content.Choices);
               $("#sendButton").show("slow");
-
+              */
             }
           }
         });
