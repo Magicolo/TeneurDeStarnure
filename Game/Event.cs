@@ -37,6 +37,20 @@ namespace Game
 		}
 	}
 
+	public sealed class Player
+	{
+		public string Identifier = "";
+		public Character Character;
+		public string[] Notes = { };
+	}
+
+	public sealed class Character
+	{
+		public Characters Identifier;
+		public string Description;
+		public string Objective;
+	}
+
 	public sealed class Event
 	{
 		public readonly string Identifier;
