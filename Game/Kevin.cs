@@ -34,10 +34,10 @@ namespace Game
 			_identifierToPlayer.TryGetValue(playerId, out var character) ?
 			character.ToString().ToSuccess() : "CHARACTER NOT FOUND".ToFailure();
 
-		public static Result GetCharacterChoices() => _descriptions.Serialize().ToSuccess();
+		public static Result GetCharacterChoices() => _descriptions.ToJson().ToSuccess();
 		public static Result GetCurrentEventId(string playerId) => _currentEvent?.Identifier.ToSuccess() ?? "EVENT NOT FOUND".ToFailure();
-		public static Result GetCurrentEvent(string playerId) => _currentEvent?.Serialize().ToSuccess() ?? "EVENT NOT FOUND".ToFailure();
-		public static Result GetTestContent() => Story.ApproachThePyramid.Serialize().ToSuccess();
+		public static Result GetCurrentEvent(string playerId) => _currentEvent?.ToJson().ToSuccess() ?? "EVENT NOT FOUND".ToFailure();
+		public static Result GetTestContent() => Story.ApproachThePyramid.ToJson().ToSuccess();
 
 		public static Result HandleAnswer(string id, string answerId) => default;
 	}
