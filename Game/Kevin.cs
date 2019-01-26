@@ -40,7 +40,7 @@ namespace Game
 			.ToDictionary(value => value.Identifier);
 
 		static States _state;
-		static Event _currentEvent;
+		static Event _currentEvent = Story.ApproachThePyramid;
 
 		public static Result GetNewPlayerId(string character)
 		{
