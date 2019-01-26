@@ -19,12 +19,18 @@ namespace Game
 		public static implicit operator Choice(in (string label, string link, Characters characters) choice) => new Choice(choice.label, choice.link, choice.characters);
 		public static implicit operator Choice(in (string label, string link) choice) => new Choice(choice.label, choice.link);
 
+		public readonly string Identifier;
 		public readonly string Label;
 		public readonly string Link;
 		public readonly Characters Characters;
 
-		public Choice(string label, string link, Characters characters = Characters.All)
+		public Choice(string label, string link, Characters characters = Characters.All) :
+			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, link, characters)
+		{ }
+
+		public Choice(string identifier, string label, string link, Characters characters = Characters.All)
 		{
+			Identifier = identifier;
 			Label = label;
 			Link = link;
 			Characters = characters;
