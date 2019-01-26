@@ -1,31 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game
 {
 	public static class Kevin
 	{
-		public static string GetCurrentEventId(string playerId)
+		static readonly Dictionary<string, Characters> _identifierToPlayer = new Dictionary<string, Characters>();
+		static readonly Dictionary<Characters, string> _descriptions = new Dictionary<Characters, string>
 		{
-			return "a";
+			{ Characters.Earth, "" },
+			{ Characters.Fire, "" },
+			{ Characters.Lau, "" },
+			{ Characters.Metal, "" },
+			{ Characters.Water, "" },
+			{ Characters.Wood, "" }
+		};
+
+
+		static Event _currentEvent;
+
+		public static (string character, string description)[] GetCharacterChoices() =>
+			_descriptions.Select(pair => (pair.Key.ToString(), pair.Value)).ToArray();
+
+		public static string GetNewPlayerId(string character)
+		{
+			if (Enum.TryParse<Characters>(character, out var casted))
+			{
+				var identifier = (_identifierToPlayer.Count + 1).ToString();
+				_identifierToPlayer[identifier] = casted;
+				return identifier;
+			}
+
+			return "INVALID CHARACTER";
 		}
 
-		public static string GetCurrentEvent(string playerId) 
-		{
-			return "{nodes =[{\"type\"=\"text\"}]}"; 
-		}
+		public static string GetCharacter(string playerId) =>
+			_identifierToPlayer.TryGetValue(playerId, out var character) ? character.ToString() : "CHARACTER NOT FOUND";
 
-		public static string GetTestContent() 
-		{ 
-			return "{nodes =[{\"type\"=\"HelloWorld\"}]}";
-		}
+		public static string GetCurrentEventId(string playerId) => _currentEvent?.Identifier ?? "EVENT NOT FOUND";
 
-		public static string HandleAnswer(string id, string answerId)
-		{
-			return "OK";
-		}
+		public static string GetCurrentEvent(string playerId) => _currentEvent?.Serialize() ?? "EVENT NOT FOUND";
+
+		public static string GetTestContent() => Story.ApproachThePyramid.Serialize();
+
+		public static string HandleAnswer(string id, string answerId) => "OK";
 	}
 }
