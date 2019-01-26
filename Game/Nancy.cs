@@ -33,6 +33,12 @@ namespace Game
 				return JsonResponse(Kevin.GetCurrentEvent(request.Id));
 			};
 
+			Get["/user/{id}/getPlayer"] = value =>
+			{
+				var request = this.Bind<RequestObject>();
+				return JsonResponse(Kevin.GetPlayer(request.Id));
+			};
+
 			Get["/user/{id}/getTestContent"] = value =>
 			{
 				var request = this.Bind<RequestObject>();
