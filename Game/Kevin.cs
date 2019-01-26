@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -16,41 +15,64 @@ namespace Game
 
 	public static class Kevin
 	{
-		public enum States
+		static readonly Dictionary<string, Character> _characters = new[]
 		{
-			None,
-			VotingAll,
-			VotingArbitrage,
-			VotingResults
-		}
-
-		static readonly Dictionary<string, Characters> _players = new Dictionary<string, Characters>();
-		static readonly Dictionary<Characters, string> _descriptions = new Dictionary<Characters, string>
-		{
-			{ Characters.Earth, "Earth" },
-			{ Characters.Fire, "Fire" },
-			{ Characters.Lau, "Lau" },
-			{ Characters.Metal, "Metal" },
-			{ Characters.Water, "Water" },
-			{ Characters.Wood, "Wood" }
-		};
+			new Character
+			{
+				Identifier = Characters.Earth,
+				Description = "Eat vegetables and carrots also.",
+				Objective = "Find more potatoes."
+			},
+			new Character
+			{
+				Identifier = Characters.Fire,
+				Description = "All you need is wood and particle systems.",
+				Objective = "Hail to you."
+			},
+			new Character
+			{
+				Identifier = Characters.Lau,
+				Description = "He-Lau to you.",
+				Objective = "Make a friend."
+			},
+			new Character
+			{
+				Identifier = Characters.Metal,
+				Description = "Clunk clunk clunk.",
+				Objective = "Find more potatoes."
+			},
+			new Character
+			{
+				Identifier = Characters.Water,
+				Description = "Falls from the sky, drinks your soup.",
+				Objective = "Rain."
+			},
+			new Character
+			{
+				Identifier = Characters.Wood,
+				Description = "No fire here please.",
+				Objective = "... there is no objective... or is there..."
+			}
+		}.ToDictionary(character => character.Identifier.ToString());
 		static readonly Dictionary<string, Event> _events = typeof(Story).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
+		static readonly Dictionary<string, Player> _players = new Dictionary<string, Player>();
+		static Event _event = Story.ApproachThePyramid;
 
-		static readonly Dictionary<string, string> _playerToChoice = new Dictionary<string, string>();
-
-		static States _state;
-		static Event _currentEvent = Story.ApproachThePyramid;
-
-		public static Result GetNewPlayerId(string character)
+		public static Result GetNewPlayerId(string characterId)
 		{
-			if (Enum.TryParse<Characters>(character, out var casted))
+			if (_characters.TryGetValue(characterId, out var character))
 			{
 				var identifier = (_players.Count + 1).ToString();
-				_players[identifier] = casted;
-				return identifier.ToSuccess();
+				var player = _players[identifier] = new Player
+				{
+					Identifier = identifier,
+					Character = character,
+					Notes = { }
+				};
+				return player.ToSuccess();
 			}
 
 			return Failures.InvalidCharacter;
@@ -58,27 +80,26 @@ namespace Game
 
 		public static Result ChooseEventChoice(string playerId, string choiceId)
 		{
-			if (_currentEvent == null) return Failures.CurrentEventNotFound;
+			if (_event == null) return Failures.CurrentEventNotFound;
 
-			var choice = _currentEvent.Choices.FirstOrDefault(current => current.Identifier == choiceId);
+			var choice = _event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
 
 			if (_events.TryGetValue(choice.Link, out var next))
 			{
-				_currentEvent = next;
+				_event = next;
 				return "".ToSuccess();
 			}
 
 			return Failures.NextEventNotFound;
 		}
 
-		public static Result GetCharacter(string playerId) =>
-			_players.TryGetValue(playerId, out var character) ?
-			character.ToString().ToSuccess() : Failures.PlayerNotFound;
+		public static Result GetPlayer(string playerId) =>
+			_players.TryGetValue(playerId, out var player) ? player.ToSuccess() : Failures.PlayerNotFound;
 
-		public static Result GetCharacters() => _descriptions.ToJson().ToSuccess();
-		public static Result GetCurrentEventId(string playerId) => _currentEvent?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetCurrentEvent(string playerId) => _currentEvent?.ToJson().ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCharacters() => _characters.ToSuccess();
+		public static Result GetCurrentEventId(string playerId) => _event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCurrentEvent(string playerId) => _event?.ToJson().ToSuccess() ?? Failures.CurrentEventNotFound;
 		public static Result GetTestContent() => Story.ApproachThePyramid.ToJson().ToSuccess();
 	}
 }
