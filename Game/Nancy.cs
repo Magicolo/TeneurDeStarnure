@@ -1,8 +1,6 @@
 ﻿using Nancy;
 using Nancy.ModelBinding;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Game
@@ -54,8 +52,11 @@ namespace Game
 
 		}
 
-		public Response JsonResponse(string jsonString) {
-			byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+		public Response JsonResponse(Result result) => JsonResponse(result.Serialize());
+
+		public Response JsonResponse(string jsonString)
+		{
+			var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
 			return new Response()
 			{
 				StatusCode = HttpStatusCode.OK,

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Game
 {
@@ -17,33 +16,29 @@ namespace Game
 			{ Characters.Wood, "" }
 		};
 
-
 		static Event _currentEvent;
 
-		public static (string character, string description)[] GetCharacterChoices() =>
-			_descriptions.Select(pair => (pair.Key.ToString(), pair.Value)).ToArray();
-
-		public static string GetNewPlayerId(string character)
+		public static Result GetNewPlayerId(string character)
 		{
 			if (Enum.TryParse<Characters>(character, out var casted))
 			{
 				var identifier = (_identifierToPlayer.Count + 1).ToString();
 				_identifierToPlayer[identifier] = casted;
-				return identifier;
+				return identifier.ToSuccess();
 			}
 
-			return "INVALID CHARACTER";
+			return "INVALID CHARACTER".ToFailure();
 		}
 
-		public static string GetCharacter(string playerId) =>
-			_identifierToPlayer.TryGetValue(playerId, out var character) ? character.ToString() : "CHARACTER NOT FOUND";
+		public static Result GetCharacter(string playerId) =>
+			_identifierToPlayer.TryGetValue(playerId, out var character) ?
+			character.ToString().ToSuccess() : "CHARACTER NOT FOUND".ToFailure();
 
-		public static string GetCurrentEventId(string playerId) => _currentEvent?.Identifier ?? "EVENT NOT FOUND";
+		public static Result GetCharacterChoices() => _descriptions.Serialize().ToSuccess();
+		public static Result GetCurrentEventId(string playerId) => _currentEvent?.Identifier.ToSuccess() ?? "EVENT NOT FOUND".ToFailure();
+		public static Result GetCurrentEvent(string playerId) => _currentEvent?.Serialize().ToSuccess() ?? "EVENT NOT FOUND".ToFailure();
+		public static Result GetTestContent() => Story.ApproachThePyramid.Serialize().ToSuccess();
 
-		public static string GetCurrentEvent(string playerId) => _currentEvent?.Serialize() ?? "EVENT NOT FOUND";
-
-		public static string GetTestContent() => Story.ApproachThePyramid.Serialize();
-
-		public static string HandleAnswer(string id, string answerId) => "OK";
+		public static Result HandleAnswer(string id, string answerId) => default;
 	}
 }

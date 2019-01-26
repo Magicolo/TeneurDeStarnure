@@ -10,5 +10,7 @@ namespace Game
 			Script = @event.Script.Build(@event.Script),
 			@event.Choices
 		});
+
+		public static string Serialize(this object @object) => JsonConvert.SerializeObject(@object);
 	}
 }

@@ -54,11 +54,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Event.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
+    <Compile Include="Json.cs" />
+    <Compile Include="Kevin.cs" />
     <Compile Include="Nancy.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Story\Story.cs" />
     <Compile Include="WebServer.cs" />
   </ItemGroup>
   <ItemGroup>
