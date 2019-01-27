@@ -53,12 +53,13 @@ namespace Game
 				Objective = "Rain."
 			},
 		}).ToDictionary(character => character.Identifier.ToString());
-		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+		public readonly Dictionary<string, Event> Events = typeof(MainStory).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
-		public Event Event = DoggoEpisode.Vestibule;
+		public Event Event = MainStory.Entry;
+		public string LastChoice;
 	}
 
 	public static class Kevin
@@ -89,8 +90,14 @@ namespace Game
 			var choice = State.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
 
-			choice.Effect(State);
-			return "".ToSuccess();
+			if (State.Players.TryGetValue(playerId, out var player))
+			{
+				choice.Effect(State);
+				State.LastChoice = $"{player.Character.Name} has chosen {choice.Label}.";
+				return State.LastChoice.ToSuccess();
+			}
+
+			return Failures.PlayerNotFound;
 		}
 
 		public static Result GetPlayer(string playerId) =>

@@ -74,6 +74,13 @@ namespace Game
 				JObject.FromObject(new { Type = data.GetType().Name, data.Time }) :
 				default);
 
+		public static Node If(Func<State, bool> condition, Node @true, Node @false) => new Node(
+			new Data.If { Condition = condition },
+			(node, state) => node.Data is Data.If data ?
+				(data.Condition(state) ? node.Children[0].Build(node.Children[0], state) : node.Children[1].Build(node.Children[1], state)) :
+				default,
+			@true, @false);
+
 		public static Node Style(string value, params Node[] children) => new Node(
 			new Data.Style { Value = value },
 			(node, state) => node.Data is Data.Style data ?
@@ -171,6 +178,7 @@ namespace Game
 
 	namespace Data
 	{
+		public struct If : IData { public Func<Game.State, bool> Condition; }
 		public struct State : IData { public Func<Game.State, string> Get; }
 		public struct Delay : IData { public float Time; }
 		public struct Text : IData { public string Value; }
