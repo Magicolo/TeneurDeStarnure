@@ -16,6 +16,18 @@
     ul {
       list-style: none;
     }
+
+    h3 {
+      margin: 1px;
+    }
+
+    button.storyChoice {
+      margin: 7px;
+    }
+
+    .scroll {
+      overflow-y: scroll;
+    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -44,16 +56,10 @@
       var curr = $(".current");
       curr
         .removeClass("current")
-        .append("<span style=\"" + cssProperty + ":" + node.Value + "\">");
-      var s = "#output div:last";
-      while ($(s + " >span:last ").size() > 0)
-        s += " >span:last ";
-      var newCurr = $(s);
-      newCurr.addClass("current");
-
+        .append("<span class=\"current\" style=\"" + cssProperty + ":" + node.Value + "\">");
       await ShowNodeChildren(node);
-
-      newCurr.removeClass("current");
+      $(".current")
+        .removeClass("current");
       curr.addClass("current");
     }
 
@@ -61,19 +67,19 @@
       switch (node.Type) {
 
         case "Color":
-          ShowStyledNode(node, "color");
+          await ShowStyledNode(node, "color");
           break;
         case "Style":
-          ShowStyledNode(node, "font-style");
+          await ShowStyledNode(node, "font-style");
           break;
         case "FontWeight":
-          ShowStyledNode(node, "font-weight");
+          await ShowStyledNode(node, "font-weight");
           break;
         case "Decoration":
-          ShowStyledNode(node, "text-decoration");
+          await ShowStyledNode(node, "text-decoration");
           break;
         case "FontSize":
-          ShowStyledNode(node, "font-size");
+          await ShowStyledNode(node, "font-size");
           break;
         case "Text":
           $(".current").append(node.Value);
@@ -102,6 +108,7 @@
 
       $("button.storyChoice").click(function (btn) {
         var choiceId = btn.target.title;
+        $("button.storyChoice").remove();
         $.ajax({
           url: "/user/1/answer/" + choiceId,
           dataType: "jsonp",
@@ -135,6 +142,7 @@
         success: async function (data) {
           if (data.Success && data.Content != eventId) {
             console.log("Event changed from " + eventId + " to " + data.Content);
+            $("button.storyChoice").remove();
             eventId = data.Content;
             //await EmptyContent();
             FetchEventContent();
@@ -158,12 +166,6 @@
             await ShowNode(data.Content.Script);
             await sleep(1000);
             await ShowChoices(data.Content.Choices);
-            $(".current").animate({
-              scrollTop: $(".current").height() + 1000 - $(".current").height()
-            },
-              1400,
-              "easeOutQuint"
-            );
           }
         }
       });
@@ -182,8 +184,8 @@
           if (data.Success) {
             for (const key in data.Content) {
               const element = data.Content[key];
-              var newEle = "<div class=\"col-md-4\">"
-                + "<h3>" + element.Name + "</h3><br/>" + element.Description + "<br/><button class=\"selectCharacter\">Select</button>"
+              var newEle = "<div class=\"col-md-4 well \">"
+                + "<h3>" + element.Name + "</h3><br/>" + element.Description + "<br/><button class=\"btn-primary selectCharacter\">Select</button>"
                 + "</div>";
               $("#PlayerSelect ul").append(newEle);
             }
@@ -218,21 +220,34 @@
         success: async function (data) {
           //console.log(data);
           if (data.Success) {
-            $("#characterName h2").empty().append("Character: " + data.Content.Character.Name);
-            $("#characterObjectif h2").empty().append("Objective: " + data.Content.Character.Objective);
+            $("#characterName span").empty().append(data.Content.Character.Name);
+            $("#characterObjectif span").empty().append(data.Content.Character.Objective);
             $("#notes").empty().append(data.Content.Notes);
           }
         }
       });
     }
 
+    function CheckScroll() {
+      if ($("#scrollLock")[0].checked)
+        $("#output").animate({
+          scrollTop: $("#output").height()
+        },
+          1400,
+          "easeOutQuint"
+        );
+    }
     async function GoToGame() {
       $("#PlayerSelect").hide(100);
       await sleep(100);
       $("#GameScreen").show(500);
-
+      
+      FetchPlayerInfo();
+      await sleep(100);
+      
       setInterval(FetchEventIdPlease, 500);
       setInterval(FetchPlayerInfo, 1000);
+      setInterval(CheckScroll, 200);
     }
 
 
@@ -243,6 +258,18 @@
       //Game
       $("#GameScreen").hide();
       $("#sendButton").hide();
+
+      var window_height = $(window).height(),
+        content_height = window_height - 200;
+
+      $('#output').height(content_height);
+    });
+
+
+    $(window).resize(function () {
+      var window_height = $(window).height(),
+        content_height = window_height - 200;
+      $('#output').height(content_height);
     });
   </script>
 </head>
@@ -254,7 +281,9 @@
 <body>
 
   <div class="container">
-
+    <center>
+      <h1>The game name</h1>
+    </center>
     <div id="PlayerSelect">
       <ul>
 
@@ -266,19 +295,25 @@
     <div id="GameScreen">
       <div class="page-header">
         <div class="row">
-          <div id="characterName" class="col-md-4">
-            <h2></h2>
+          <div id="characterName" class="col-md-2">
+            <h3>My name</h3>
+            <span></span>
           </div>
           <div id="characterObjectif" class="col-md-8">
-            <h2></h2>
+            <h3>My objective</h3>
+            <span></span>
+          </div>
+          <div id="characterName" class="col-md-2">
+            <h3>Options</h3>
+            <label>
+              <input type="checkbox" id="scrollLock" checked="checked">Fellow chat scroll
+            </label>
           </div>
         </div>
         <div id="notes"></div>
       </div>
 
-      <hr />
-
-      <div id="output" class="pre-scrollable">
+      <div id="output" class="scroll">
         <div class="current"></div>
       </div>
     </div>
