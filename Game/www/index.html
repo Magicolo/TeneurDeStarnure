@@ -59,6 +59,11 @@
   background-color:black;
 
 }
+
+.outputRoom
+{
+	font-weight:bold;
+}
     .CreditSection{
       color:darkgray;
       font-size: 150%;
@@ -230,7 +235,7 @@
               .append("<div class=\"current well\"></div>");
 
 
-
+$(".current").append("<div class=\"outputRoom\">"+data.Content.Identifier+"</div>");
             $("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
             await sleep(200);
             await ShowNode(data.Content.Script);

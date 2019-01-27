@@ -12,7 +12,6 @@ namespace Game
 
 	public static class MainStory
 	{
-		// Lau can only try to hand himself here?
 		public static readonly Event Vestibule = new Event(nameof(Vestibule),
 			Line("The coat place. Useless now, of course. No coat is warm enough for this weather."),
 			new Choice("Hang self on coat hanger.",
@@ -98,8 +97,8 @@ namespace Game
 				null
 			),
 			new Choice("Go to the study.",
-				Line("The animator Alex Trebek remain silent."),
-				(state, player) => player.Character.Identifier == Characters.Dad && state.DadLivingRoom == 2,
+				Line("You feel compelled to go to the study and go."),
+				Condition.IsCharacter(Characters.Dad),
 				Effect.GoTo(nameof(Study)) + (state => state.DadLivingRoom = 0)
 			)
 		);
