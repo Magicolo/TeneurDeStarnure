@@ -60,12 +60,12 @@ namespace Game
 				Objective = "... there is no objective... or is there..."
 			}
 		}).ToDictionary(character => character.Identifier.ToString());
-		public readonly Dictionary<string, Event> Events = typeof(Story).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
-		public Event Event = Story.ApproachThePyramid;
+		public Event Event = DoggoEpisode.Vestibule;
 	}
 
 	public static class Kevin
