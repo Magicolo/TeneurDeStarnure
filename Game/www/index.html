@@ -18,6 +18,7 @@
     }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
 
@@ -82,17 +83,23 @@
       //console.log(choices);
       for (let i = 0; i < choices.length; i++) {
         const choice = choices[i];
-        var choiceElement = MakeButton("storyChoice",choice.Label, choice.Identifier);
+        var choiceElement = MakeButton("storyChoice", choice.Label, choice.Identifier);
         $('.current').append(choiceElement);
-      }
-      /*
-      btns.hide();
-      for (let i = 1; i <= btns.length; i++) {
-        var select = $("#choices ul li:nth-child(" + i + ")");
-        select.show(200);
+        $('.current :last').hide().show(200);
         await sleep(200);
-      }*/
+      }
 
+      $("button.storyChoice").click(function (btn) {
+        var choiceId = btn.target.title;
+        $.ajax({
+          url: "/user/1/answer/" + choiceId,
+          dataType: "jsonp",
+          success: async function (data) {
+            console.log(data);
+			eventId = "";
+          }
+        });
+      });
     }
 
     async function EmptyContent() {
@@ -133,19 +140,26 @@
           //console.log(data);
           if (data.Success) {
             $(".current")
-            .append("<div class=\"current well\"></div>")
-            .removeClass("current");
+              .removeClass("current")
+              .parent()
+              .append("<div class=\"current well\"></div>");
 
             await ShowNode(data.Content.Script);
+			await sleep(2000);
             await ShowChoices(data.Content.Choices);
-            $("#sendButton").show("slow");
+            $(".current").animate({
+              scrollTop: $(".current").height() + 1000 - $(".current").height()
+            },
+              1400,
+              "easeOutQuint"
+            );
           }
         }
       });
     }
 
-    function MakeButton(className,text,title){
-      return "<button class=\".btn-primary "+className+"\" title=\""+title+"\">"+text+"</button>";
+    function MakeButton(className, text, title) {
+      return "<button class=\"btn-primary " + className + "\" title=\"" + title + "\">" + text + "</button>";
     }
 
     function GetCharactersChoices() {
@@ -191,7 +205,7 @@
         url: "/user/" + playerId + "/getPlayer",
         dataType: "jsonp",
         success: async function (data) {
-          console.log(data);
+          //console.log(data);
           if (data.Success) {
             $("#characterName h2").empty().append(data.Content.Character.Name);
             $("#characterObjectif h2").empty().append(data.Content.Character.Objective);
@@ -218,20 +232,6 @@
       //Game
       $("#GameScreen").hide();
       $("#sendButton").hide();
-
-      $("button").click(function () {
-        var choiceId = $("input:radio:checked")[0].value;
-        $.ajax({
-          url: "/user/1/answer/" + choiceId,
-          dataType: "jsonp",
-          success: async function (data) {
-            console.log(data);
-          }
-        });
-      });
-
-
-
     });
   </script>
 </head>
@@ -267,7 +267,7 @@
 
       <hr />
 
-      <div id="output">
+      <div id="output" class="pre-scrollable">
         <div class="current"></div>
       </div>
     </div>
