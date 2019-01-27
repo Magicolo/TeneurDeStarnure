@@ -93,7 +93,7 @@ namespace Game
 
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
-				State.LastChoice = $"{player.Character.Identifier} has chosen {choice.Label}.";
+				State.LastChoice = $"'{player.Character.Identifier}' has chosen '{choice.Label}'.";
 				State.LastOutcome = choice.Outcome;
 				choice.Effect(State);
 				return "".ToSuccess();
