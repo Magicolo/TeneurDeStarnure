@@ -26,23 +26,28 @@ namespace Game
 	public sealed class Choice
 	{
 		public static implicit operator Choice((string label, Action<State> effect) choice) =>
-			new Choice(choice.label, effect: choice.effect);
+			new Choice(choice.label, condition: null, effect: choice.effect);
 		public static implicit operator Choice((string label, Func<State, Player, bool> condition, Action<State> effect) choice) =>
 			new Choice(choice.label, choice.condition, choice.effect);
 
 		public readonly string Identifier;
 		public readonly string Label;
+		public readonly Node Outcome = Node.Text("");
 		public readonly Func<State, Player, bool> Condition;
 		public readonly Action<State> Effect;
 
 		public Choice(string label, Func<State, Player, bool> condition = null, Action<State> effect = null) :
-			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, condition, effect)
+			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, condition: condition, effect: effect)
+		{ }
+		public Choice(string label, Node outcome = null, Func<State, Player, bool> condition = null, Action<State> effect = null) :
+			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, outcome, condition, effect)
 		{ }
 
-		public Choice(string identifier, string label, Func<State, Player, bool> condition = null, Action<State> effect = null)
+		public Choice(string identifier, string label, Node outcome = null, Func<State, Player, bool> condition = null, Action<State> effect = null)
 		{
 			Identifier = identifier;
 			Label = label;
+			Outcome = outcome ?? Node.Text("");
 			Condition = condition ?? ((_, __) => true);
 			Effect = effect ?? (_ => { });
 		}
@@ -69,7 +74,7 @@ namespace Game
 		public readonly Node Script;
 		public readonly Choice[] Choices;
 
-		public Event(string identifier, in Node script, params Choice[] choices)
+		public Event(string identifier, Node script, params Choice[] choices)
 		{
 			Identifier = identifier;
 			Script = script;

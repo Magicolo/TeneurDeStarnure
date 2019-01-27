@@ -52,14 +52,15 @@ namespace Game
 			//	Description = "Neighbour the same age as Lau. They were friends until Pal used knowledge about Lau to gain favour with bullies at school.",
 			//	Objective = "Rain."
 			//},
-		}).ToDictionary(character => character.Name.ToString());
+		}).ToDictionary(character => character.Name);
 		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
 		public Event Event = DoggoEpisode.Vestibule;
-		public string LastChoice;
+		public string LastChoice = "";
+		public Node LastOutcome = Node.Text("");
 	}
 
 	public static class Kevin
@@ -92,9 +93,10 @@ namespace Game
 
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
-				choice.Effect(State);
 				State.LastChoice = $"{player.Character.Identifier} has chosen {choice.Label}.";
-				return State.LastChoice.ToSuccess();
+				State.LastOutcome = choice.Outcome;
+				choice.Effect(State);
+				return "".ToSuccess();
 			}
 
 			return Failures.PlayerNotFound;
