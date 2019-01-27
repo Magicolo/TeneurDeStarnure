@@ -21,7 +21,8 @@ namespace Game
 				value.Identifier,
 				Script = value.Script.Build(value.Script.Typewrite(), _state),
 				value.Choices,
-				Kevin.State.LastChoice
+				Kevin.State.LastChoice,
+				LastOutcome = Kevin.State.LastOutcome.Build(Kevin.State.LastOutcome.Typewrite(), _state)
 			}).WriteTo(writer);
 
 			public EventConverter(State state) { _state = state; }
