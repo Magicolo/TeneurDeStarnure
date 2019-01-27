@@ -7,33 +7,45 @@ namespace Game
 	{
 		All = ~0,
 		Lau = 1 << 0,
-		Fire = 1 << 1,
-		Water = 1 << 2,
-		Metal = 1 << 3,
-		Earth = 1 << 4,
-		Wood = 1 << 5
+		Mom = 1 << 1,
+		Dad = 1 << 2,
+		Dog = 1 << 3,
+		Sis = 1 << 4,
+		Pal = 1 << 5
+	}
+
+	public static class Condition
+	{
+		public static Func<State, Player, bool> IsCharacter(Characters character) => (_, player) => (player.Character.Identifier & character) != 0;
+	}
+
+	public static class Effect
+	{
+		public static Action<State> GoTo(string eventId) => state => { if (state.Events.TryGetValue(eventId, out var @event)) state.Event = @event; };
 	}
 
 	public sealed class Choice
 	{
-		public static implicit operator Choice(in (string label, string link, Characters characters) choice) => new Choice(choice.label, choice.link, choice.characters);
-		public static implicit operator Choice(in (string label, string link) choice) => new Choice(choice.label, choice.link);
+		public static implicit operator Choice((string label, Action<State> effect) choice) =>
+			new Choice(choice.label, effect: choice.effect);
+		public static implicit operator Choice((string label, Func<State, Player, bool> condition, Action<State> effect) choice) =>
+			new Choice(choice.label, choice.condition, choice.effect);
 
 		public readonly string Identifier;
 		public readonly string Label;
-		public readonly string Link;
-		public readonly Characters Characters;
+		public readonly Func<State, Player, bool> Condition;
+		public readonly Action<State> Effect;
 
-		public Choice(string label, string link, Characters characters = Characters.All) :
-			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, link, characters)
+		public Choice(string label, Func<State, Player, bool> condition = null, Action<State> effect = null) :
+			this(label.Replace(' ', '_').Replace('\n', '_').Replace('\r', '_'), label, condition, effect)
 		{ }
 
-		public Choice(string identifier, string label, string link, Characters characters = Characters.All)
+		public Choice(string identifier, string label, Func<State, Player, bool> condition = null, Action<State> effect = null)
 		{
 			Identifier = identifier;
 			Label = label;
-			Link = link;
-			Characters = characters;
+			Condition = condition ?? ((_, __) => true);
+			Effect = effect ?? (_ => { });
 		}
 	}
 

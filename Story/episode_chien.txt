@@ -1,1 +1,36 @@
 "Welp. I'm home."
+
+>Hang up coat.
+	>"Might as well feel physically comfortable."
+	
+	
+>Take off boots.
+	>"Mom would be pretty pissed if she saw me in the house with them on."
+>Go to the living room.
+	>"I still don't feel like I belong here."
+>Go into Dad's study.
+	>"Yeah, I'll have to, I guess. But not just yet."
+>Go to the dining room.
+	>"I don't even remember the last meal I ate in here."
+		>Sit.
+			>"Mom would always give the dog food. But if I tried to do that, I'd get scolded."
+		
+>Go to the living room.
+	>"I still don't feel like I belong here. They still have the dog bed here? It's been here for what, thirty years? Oh jeeze. I'm old."
+		>Sit on the dog bed.
+			>"That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever."
+				>Think about Mino.
+					>"Mino made me afraid of almost every dog I've ever seen. I had to break up with a girl once because of her dog. And the bitch was great! The dog, I mean. The girl was... well, maybe I would have broken up with her anyway. The dog was an excuse."
+				>Meditate.
+					>"..." "Lau Tzu said, "Return animosity with virtue." Sigh. At least he made my mother happy."
+				>Stand.
+				
+>Go to the backyard.
+	>? have coat?
+		>"It's cold out there."
+		>"It looks like Mom hasn't stopped gardening. I don't remember any of these plants. And the dog's grave is... wow. Glorious."
+			>Visit grave.
+				>"Mino, you were an angry little dog. I don't envy your upbringing, coming from a puppy mill. Must have been pretty brutal. I'm glad you were able to find comfort in my mother, and comfort her in return. Thanks."
+					>You won't jump the next time you see a dog. Probably.
+			>Water garden.
+			>Go inside.
