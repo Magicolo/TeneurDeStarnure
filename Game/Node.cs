@@ -22,6 +22,21 @@ namespace Game
 			child);
 
 		public static Node Sequence(this IEnumerable<Node> nodes) => Node.Sequence(nodes.ToArray());
+
+		public static Node Normal(this Node node, bool style = true, bool font = true) =>
+			style ? Node.Style("normal", node).Normal(false, font) :
+			font ? Node.FontWeight("normal", node).Normal(style, false) :
+			node;
+
+		public static Node Italic(this Node node) => Node.Style("italic", node);
+		public static Node Oblique(this Node node) => Node.Style("oblique", node);
+		public static Node Bold(this Node node) => Node.FontWeight("bold", node);
+		public static Node Size(this Node node, float percent) => Node.FontSize($"{percent}%", node);
+		public static Node Thickness(this Node node, float value) => Node.FontWeight(value.ToString(), node);
+		public static Node Overline(this Node node) => Node.Decoration("overline", node);
+		public static Node Underline(this Node node) => Node.Decoration("underline", node);
+		public static Node LineThrough(this Node node) => Node.Decoration("line-through", node);
+		public static Node Color(byte red, byte green, byte blue) => Node.Color($"rgb({red}, {green}, {blue})");
 	}
 
 	public sealed class Node
@@ -46,6 +61,41 @@ namespace Game
 			node => node.Data is Data.Delay data ?
 				JObject.FromObject(new { Type = data.GetType().Name, data.Time }) :
 				default);
+
+		public static Node Style(string value, params Node[] children) => new Node(
+			new Data.Style { Value = value },
+			node => node.Data is Data.Style data ?
+				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				default,
+			children);
+
+		public static Node FontWeight(string value, params Node[] children) => new Node(
+			new Data.FontWeight { Value = value },
+			node => node.Data is Data.FontWeight data ?
+				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				default,
+			children);
+
+		public static Node FontSize(string value, params Node[] children) => new Node(
+			new Data.FontSize { Value = value },
+			node => node.Data is Data.FontSize data ?
+				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				default,
+			children);
+
+		public static Node Decoration(string value, params Node[] children) => new Node(
+			new Data.Decoration { Value = value },
+			node => node.Data is Data.Decoration data ?
+				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				default,
+			children);
+
+		public static Node Color(string value, params Node[] children) => new Node(
+			new Data.Color { Value = value },
+			node => node.Data is Data.Color data ?
+				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				default,
+			children);
 
 		public static Node Sequence(params Node[] nodes)
 		{
@@ -88,5 +138,10 @@ namespace Game
 		public struct Text : IData { public string Value; }
 		public struct Break : IData { }
 		public struct Sequence : IData { }
+		public struct Color : IData { public string Value; }
+		public struct Style : IData { public string Value; }
+		public struct Decoration : IData { public string Value; }
+		public struct FontWeight : IData { public string Value; }
+		public struct FontSize : IData { public string Value; }
 	}
 }
