@@ -41,16 +41,20 @@
     }
 
     async function ShowStyledNode(node, cssProperty) {
-      $(".current")
+      var curr = $(".current");
+      curr
         .removeClass("current")
-        .append("<span style=\"" + cssProperty + ":" + node.Value + "\">")
-        .children(":last")
-        .addClass("current");
+        .append("<span style=\"" + cssProperty + ":" + node.Value + "\">");
+      var s = "#output div:last";
+      while ($(s + " >span:last ").size() > 0)
+        s += " >span:last ";
+      var newCurr = $(s);
+      newCurr.addClass("current");
+
       await ShowNodeChildren(node);
-      $(".current")
-        .removeClass("current")
-        .parent()
-        .addClass("current");
+
+      newCurr.removeClass("current");
+      curr.addClass("current");
     }
 
     async function ShowNode(node) {
