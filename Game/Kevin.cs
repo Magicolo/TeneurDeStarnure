@@ -89,8 +89,13 @@ namespace Game
 			var choice = State.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
 
-			choice.Effect(State);
-			return "".ToSuccess();
+			if (State.Players.TryGetValue(playerId, out var player))
+			{
+				choice.Effect(State);
+				return $"{player.Character.Name} has chosen {choice.Label}.".ToSuccess();
+			}
+
+			return Failures.PlayerNotFound;
 		}
 
 		public static Result GetPlayer(string playerId) =>
