@@ -1,0 +1,27 @@
+Dad's Study
+Description: "You watch your legs go into Dad's study. It looks better with the walls all white like this."
+
+Lau 1: "Take sword from wall."
+	Response: "You hope the sword's sharp, sleek edge will allow you to pass to the next stage of existence. There will be no whispering there!"
+	Lau 2: "Merge sword with Ice Wand."
+		Response: "No! ... The whispers grow louder. The Ice Sword is pleased."
+	Lau 3: "Cut the wall down."
+		Response: "Now there's a nice breeze!"
+	Lau 4+: "Embrace the cold."
+		Response: "Your skin trembles as the wind caresses it."
+		
+	Mom 1: "Tidy up."
+		Response: "You can't help but rearrange things. All these papers and weapons all over the place.... Can't that man just put things where they belong?"
+	Mom 2: "Sweep."
+		Response: "So much snow.... You zone out while sweeping it all into one corner."
+	Mom 3: "Go to the living room."
+	
+	
+	Dad 1: "Sit at desk."
+		Response: "The feeling of unfinished business draws your butt toward the chair."
+	Dad 2: "Open gun drawer."
+		Response: "What was the passcode again? Let's try F-R-E-E-Z-E. It's open!"
+	Dad 3: "Shoot self."
+		Response: "The gun freezes as you watch your hand pick it up. When you pull the trigger, it explodes in shards of frozen iron. Your ears are ringing, and your hand bleeds for a moment before the blood freezes. The whispers are angry...."
+	Dad 4+: "Business."
+		Response: "Business, business, business!"
