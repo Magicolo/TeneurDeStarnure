@@ -140,6 +140,7 @@
         url: "/user/" + playerId + "/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
+          console.log(data);
           if (data.Success && data.Content != eventId) {
             console.log("Event changed from " + eventId + " to " + data.Content);
             $("button.storyChoice").remove();
@@ -164,8 +165,8 @@
               .append("<div class=\"current well\"></div>");
 
             
-            $("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
-            await sleep(200);
+            //$("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
+            //await sleep(200);
             await ShowNode(data.Content.Script);
             await sleep(1000);
             await ShowChoices(data.Content.Choices);
@@ -183,7 +184,7 @@
         url: "/getCharacters",
         dataType: "jsonp",
         success: async function (data) {
-          console.log(data);
+          //console.log(data);
           if (data.Success) {
             for (const key in data.Content) {
               const element = data.Content[key];
@@ -206,7 +207,7 @@
         url: "/GetNewPlayerId/" + name,
         dataType: "jsonp",
         success: async function (data) {
-          console.log(data);
+          //console.log(data);
           if (data.Success) {
             playerId = data.Content.Identifier;
             GoToGame();
@@ -241,6 +242,7 @@
         );
     }
     async function GoToGame() {
+      console.log("Starting game");
       $("#PlayerSelect").hide(100);
       await sleep(100);
       $("#GameScreen").show(500);
