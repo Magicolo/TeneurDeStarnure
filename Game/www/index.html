@@ -14,8 +14,19 @@
     crossorigin="anonymous">
 
   <style>
+    body{
+
+      background-color:rgb(42, 113, 122);
+    }
+    #GameScreen, #PlayerSelect{
+      background-color:#def;
+      padding:10px;
+    }
     ul {
       list-style: none;
+    }
+    h1{
+      color:black;
     }
 
     h3 {
@@ -38,7 +49,16 @@
       font-style: italic;
     }
 
-#Credit{margin:auto;}
+#Credit > div{
+  margin:auto;
+  padding-left:30%;
+  padding-bottom:10px;
+      background-color:#def;
+}
+#Credit{
+  background-color:black;
+
+}
     .CreditSection{
       color:darkgray;
       font-size: 150%;
@@ -221,7 +241,7 @@
     }
 
     function MakeButton(className, text, title) {
-      return "<button class=\"btn-primary " + className + "\" title=\"" + title + "\">" + text + "</button>";
+      return "<button class=\"btn btn-info " + className + "\" title=\"" + title + "\">" + text + "</button>";
     }
 
     function GetCharactersChoices() {
@@ -234,7 +254,7 @@
             for (const key in data.Content) {
               const element = data.Content[key];
               var newEle = "<div class=\"col-md-4 well \">"
-                + "<h3>" + element.Name + "</h3><br/>" + element.Description + "<br/><button class=\"btn-primary selectCharacter\">Select</button>"
+                + "<h3>" + element.Name + "</h3><br/>" + element.Description + "<br/><button class=\"btn btn-info selectCharacter\">Select</button>"
                 + "</div>";
               $("#PlayerSelect ul").append(newEle);
             }
@@ -359,31 +379,31 @@
 
 <body>
 
+  <div id="Credit">
+    <div class="CreditSection">Pseudo studio present</div>
+    <div class="CreditElement">The Coldest Winter</div>
+
+    <div><br /></div>
+    <div class="CreditSection">A game by </div>
+    <div class="CreditElement">Kevin Mc-Nally Gagnon</div>
+    <div class="CreditElement">Richard Rail</div>
+    <div class="CreditElement">Travis Henry Martin</div>
+
+    <div><br /></div>
+    <div class="CreditSection">Made for</div>
+    <div class="CreditElement">Global game jam 2019</div>
+
+    <div><br /></div>
+    <div class="CreditSection">Theme</div>
+    <div class="CreditElement">What home means to you?</div>
+
+    <div><br /></div>
+    <div><button id="StartToPlay" class="btn btn-primary">Play The Game</button></div>
+  </div>
+
   <div class="container">
 
-
-    <div id="Credit">
-      <div class="CreditSection">Pseudo studio present</div>
-      <div class="CreditElement">The Coldest Winter</div>
-
-      <div><br /></div>
-      <div class="CreditSection">A game by </div>
-      <div class="CreditElement">Kevin Mc-Nally Gagnon</div>
-      <div class="CreditElement">Richard Rail</div>
-      <div class="CreditElement">Travis Henry Martin</div>
-
-      <div><br /></div>
-      <div class="CreditSection">Made for</div>
-      <div class="CreditElement">Global game jam 2019</div>
-
-      <div><br /></div>
-      <div class="CreditSection">Theme</div>
-      <div class="CreditElement">What home means to you?</div>
-
-      <div><br /></div>
-      <div><button id="StartToPlay" class="btn btn-primary">Play The Game</button></div>
-    </div>
-
+      
     <div id="PlayerSelect">
       <center>
         <h1>The Coldest Winter</h1>
@@ -392,6 +412,7 @@
       <ul>
 
       </ul>
+      &nbsp;
     </div>
 
 
