@@ -55,7 +55,7 @@
 
   <script>
 
-
+    var SKIP_INTRO = false;
     var playerId = -1;
     var eventId = "";
 
@@ -172,6 +172,10 @@
       });
     }
 
+    function HasContent(value) {
+      return value != "null" && value != undefined && value != "";
+    }
+
     function FetchEventContent() {
       $.ajax({
         url: "/user/" + playerId + "/getEventContent",
@@ -180,11 +184,24 @@
           console.log(data);
           if (data.Success) {
             $(".current button").remove();
-            var newNode = "<p class=\"lastAction newLastChoice\">" + data.Content.LastChoice + "</p>";
-            $(".current").append(newNode);
-            $(".newLastChoice").hide().show(600);
-            await sleep(600);
-            $(".newLastChoice").removeClass("newLastChoice");
+
+            //Last Choice
+            if (HasContent(data.Content.LastChoice)) {
+              var newNode = "<p class=\"lastAction newLastChoice\">" + data.Content.LastChoice + "</p>";
+              $(".current").append(newNode);
+              $(".newLastChoice").hide().fadeIn(600);
+              await sleep(600);
+              $(".newLastChoice").removeClass("newLastChoice");
+            }
+
+            //Last Outcome
+            if (HasContent(data.Content.LastOutcome)) {
+              var lastOutcome = "<p class=\"newLastOutcome\">" + data.Content.LastOutcome + "</p>";
+              $(".current").append(lastOutcome);
+              $(".newLastOutcome").hide().fadeIn(600);
+              await sleep(600);
+              $(".newLastOutcome").removeClass("newLastOutcome");
+            }
 
             $(".current")
               .removeClass("current")
@@ -295,9 +312,15 @@
       $("#StartToPlay").click(async function () {
         $("#Credit").fadeOut(300);
         await sleep(300);
-        $("#PlayerSelect").fadeIn(300);
-        GetCharactersChoices();
+        StartCharacterChoices();
+
       });
+    }
+
+    function StartCharacterChoices() {
+      $("#Credit").hide();
+      $("#PlayerSelect").fadeIn(300);
+      GetCharactersChoices();
     }
 
 
@@ -306,7 +329,10 @@
       $("#GameScreen").hide();
       $("#sendButton").hide();
 
-      await AnimateIntro();
+      if (SKIP_INTRO)
+        StartCharacterChoices();
+      else
+        await AnimateIntro();
 
       //PlayerSelect
 
