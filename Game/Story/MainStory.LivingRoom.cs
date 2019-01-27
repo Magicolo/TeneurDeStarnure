@@ -48,7 +48,17 @@ namespace Game
 			),
 			new Choice("Take all the pills on coffee table.",
 				Line("You put the pills in your mouth but it's so cold in there that they just stick to your tongue and cheeks. You mouth is full of pills now."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 0,
+				null
+			),
+			new Choice("Watch soap opera.",
+				Line("The snow slept with the sleet and doesn't want to tell the ice. Anyway, the ice is a frigid bitch."),
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 1,
+				state => state.MomLivingRoom++
+			),
+			new Choice("Watch soap opera.",
+				Line("It's the snow channel episode."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 2,
 				null
 			),
 			new Choice("Tell Lau to shut up.",
