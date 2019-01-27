@@ -214,8 +214,8 @@
         success: async function (data) {
           //console.log(data);
           if (data.Success) {
-            $("#characterName h2").empty().append(data.Content.Character.Name);
-            $("#characterObjectif h2").empty().append(data.Content.Character.Objective);
+            $("#characterName h2").empty().append("Character: " + data.Content.Character.Name);
+            $("#characterObjectif h2").empty().append("Objective: " + data.Content.Character.Objective);
             $("#notes").empty().append(data.Content.Notes);
           }
         }

@@ -44,7 +44,7 @@ namespace Game
         //}
 
         public static Event Vestibule = new Event(nameof(Vestibule),
-                Line("Welp. I'm home.").Color(200, 200, 0),
+                Line("Welp. I'm home."),
                     ("Hang up coat.", Effect.GoTo(nameof(TakeOffCoat))),
                     ("Snow in July... At least it's an interesting apocalypse.", Effect.GoTo(nameof(Vestibule))),
                     ("Go to the living room", Effect.GoTo(nameof(LivingRoomMain)))
