@@ -143,6 +143,7 @@
             .append("<div class=\"current well\"></div>");
 
             await ShowNode(data.Content.Script);
+			await sleep(2000);
             await ShowChoices(data.Content.Choices);
             $("#sendButton").show("slow");
           }
