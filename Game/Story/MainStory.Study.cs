@@ -25,13 +25,22 @@ namespace Game
 				state => state.LauStudy++
 			),
 			new Choice("Cut the wall down.",
-				Line("Now there's a nice breeze!"),
+				Sequence(
+					Line("The Ice Sword slices the wall like a cheesecake."),
+					Line("...").Typewrite(5),
+					Line("Is that a secret room?")
+				),
 				(state, player) => player.Character.Identifier == Characters.Lau && state.LauStudy == 2,
 				state => state.LauStudy++
 			),
+			new Choice("Go in the secret room.",
+				Line("You traverse the now cut down fourth wall and enter the secret room."),
+				(state, player) => player.Character.Identifier == Characters.Lau && state.LauStudy == 3,
+				Effect.GoTo(nameof(FourthWall))
+			),
 			new Choice("Embrace the cold.",
 				Line("Your skin trembles as the wind caresses it."),
-				(state, player) => player.Character.Identifier == Characters.Lau && state.LauStudy >= 2,
+				Condition.IsCharacter(Characters.Lau),
 				null
 			),
 
