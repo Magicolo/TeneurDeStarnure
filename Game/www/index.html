@@ -153,11 +153,10 @@
         var choiceId = btn.target.title;
         $("button.storyChoice").remove();
         $.ajax({
-          url: "/user/" + playerId + "/globalId/" + eventId +"/answer/" + choiceId,
+          url: "/user/" + playerId + "/globalId/" + eventId + "/answer/" + choiceId,
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
-            eventId = "";
           }
         });
       });
@@ -304,13 +303,10 @@
     }
 
     function CheckScroll() {
-      if ($("#scrollLock")[0].checked)
-        $("#output").animate({
-          scrollTop: $("#output").height()
-        },
-          1400,
-          "easeOutQuint"
-        );
+      if ($("#scrollLock")[0].checked) {
+        var pos = $("#output").scrollTop();
+        $("#output").scrollTop(pos+10);
+      }
     }
     async function GoToGame() {
       console.log("Starting game");
@@ -452,7 +448,7 @@
       </div>
 
       <div id="output" class="scroll">
-        <div class="current"></div>
+        <div class="current well"></div>
       </div>
     </div>
 
