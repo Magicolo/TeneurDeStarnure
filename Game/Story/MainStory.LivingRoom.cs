@@ -33,7 +33,7 @@ namespace Game
 					Text("'I'm not finished with you...' ").Italic(), Line("It whispers...")
 				),
 				(state, player) => player.Character.Identifier == Characters.Lau && state.LauLivingRoom == 2,
-				null
+				state => state.LauLivingRoom++
 			),
 			new Choice("Pet the dog.",
 				Line("It never let you do this before. Huh..."),
@@ -85,7 +85,7 @@ namespace Game
 			new Choice("Watch Jeopardy.",
 				Line("You turn on the television... 'This ancient evil spirit caused a global temperature change of -60 degrees Celsius.'"),
 				(state, player) => player.Character.Identifier == Characters.Dad && state.DadLivingRoom == 1,
-				null
+				state => state.DadLivingRoom++
 			),
 			new Choice("Answer: 'Who is the Ice Wand?'",
 				Line("The animator Alex Trebek remain silent."),
