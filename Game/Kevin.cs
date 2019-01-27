@@ -21,44 +21,37 @@ namespace Game
 			{
 				Identifier = Game.Characters.Dad,
 				Name = "Dad",
-				Description = "Eat vegetables and carrots also.",
+				Description = "A greedy curmudgeon. Prone to domestic violence.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
 				Identifier = Game.Characters.Dog,
-				Name = "Dog",
-				Description = "All you need is wood and particle systems.",
+				Name = "Mino the dog",
+				Description = "Arf! Arf! Grr....",
 				Objective = "Hail to you."
 			},
 			new Character
 			{
 				Identifier = Game.Characters.Lau,
 				Name = "Lau",
-				Description = "He-Lau to you.",
+				Description = "The hero of our story. Left his home town to avoid his parents and found the Tao.",
 				Objective = "Make a friend."
 			},
 			new Character
 			{
 				Identifier = Game.Characters.Mom,
 				Name = "Mom",
-				Description = "Clunk clunk clunk.",
+				Description = "A neurotic and particular woman. Loves her dog.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
 				Identifier = Game.Characters.Pal,
 				Name = "Pal",
-				Description = "Falls from the sky, drinks your soup.",
+				Description = "Neighbour the same age as Lau. They were friends until Pal used knowledge about Lau to gain favour with bullies at school.",
 				Objective = "Rain."
 			},
-			new Character
-			{
-				Identifier = Game.Characters.Sis,
-				Name = "Sis",
-				Description = "No fire here please.",
-				Objective = "... there is no objective... or is there..."
-			}
 		}).ToDictionary(character => character.Identifier.ToString());
 		public readonly Dictionary<string, Event> Events = typeof(Story).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))

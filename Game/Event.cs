@@ -10,8 +10,7 @@ namespace Game
 		Mom = 1 << 1,
 		Dad = 1 << 2,
 		Dog = 1 << 3,
-		Sis = 1 << 4,
-		Pal = 1 << 5
+		Pal = 1 << 4
 	}
 
 	public static class Condition
