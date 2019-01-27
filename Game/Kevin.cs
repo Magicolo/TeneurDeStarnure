@@ -19,15 +19,15 @@ namespace Game
 		{
 			new Character
 			{
-				Identifier = Game.Characters.Earth,
-				Name = "Earth",
+				Identifier = Game.Characters.Dad,
+				Name = "Dad",
 				Description = "Eat vegetables and carrots also.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
-				Identifier = Game.Characters.Fire,
-				Name = "Fire",
+				Identifier = Game.Characters.Dog,
+				Name = "Dog",
 				Description = "All you need is wood and particle systems.",
 				Objective = "Hail to you."
 			},
@@ -40,22 +40,22 @@ namespace Game
 			},
 			new Character
 			{
-				Identifier = Game.Characters.Metal,
-				Name = "Metal",
+				Identifier = Game.Characters.Mom,
+				Name = "Mom",
 				Description = "Clunk clunk clunk.",
 				Objective = "Find more potatoes."
 			},
 			new Character
 			{
-				Identifier = Game.Characters.Water,
-				Name = "Water",
+				Identifier = Game.Characters.Pal,
+				Name = "Pal",
 				Description = "Falls from the sky, drinks your soup.",
 				Objective = "Rain."
 			},
 			new Character
 			{
-				Identifier = Game.Characters.Wood,
-				Name = "Wood",
+				Identifier = Game.Characters.Sis,
+				Name = "Sis",
 				Description = "No fire here please.",
 				Objective = "... there is no objective... or is there..."
 			}
@@ -65,12 +65,12 @@ namespace Game
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
-		public Event Current = Story.ApproachThePyramid;
+		public Event Event = Story.ApproachThePyramid;
 	}
 
 	public static class Kevin
 	{
-		static State _state = new State();
+		static readonly State _state = new State();
 
 		public static Result GetNewPlayerId(string characterId)
 		{
@@ -91,9 +91,9 @@ namespace Game
 
 		public static Result ChooseEventChoice(string playerId, string choiceId)
 		{
-			if (_state.Current == null) return Failures.CurrentEventNotFound;
+			if (_state.Event == null) return Failures.CurrentEventNotFound;
 
-			var choice = _state.Current.Choices.FirstOrDefault(current => current.Identifier == choiceId);
+			var choice = _state.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
 
 			choice.Effect(_state);
@@ -103,9 +103,11 @@ namespace Game
 		public static Result GetPlayer(string playerId) =>
 			_state.Players.TryGetValue(playerId, out var player) ? player.ToSuccess() : Failures.PlayerNotFound;
 
+		public static Result GetState() => _state.ToSuccess();
+
 		public static Result GetCharacters() => _state.Characters.ToSuccess();
-		public static Result GetCurrentEventId(string playerId) => _state.Current?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetCurrentEvent(string playerId) => _state.Current?.ToJson().ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetTestContent() => Story.ApproachThePyramid.ToJson().ToSuccess();
+		public static Result GetCurrentEventId(string playerId) => _state.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCurrentEvent(string playerId) => _state.Event?.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
 	}
 }

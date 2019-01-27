@@ -21,7 +21,7 @@ namespace Game
 
 	public static class Effect
 	{
-		public static Action<State> GoTo(string eventId) => state => { if (state.Events.TryGetValue(eventId, out var @event)) state.Current = @event; };
+		public static Action<State> GoTo(string eventId) => state => { if (state.Events.TryGetValue(eventId, out var @event)) state.Event = @event; };
 	}
 
 	public sealed class Choice

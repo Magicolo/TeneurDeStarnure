@@ -2,54 +2,99 @@
 <html>
 
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>GameName</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+"
+    crossorigin="anonymous">
+
   <style>
     ul {
       list-style: none;
     }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+
   <script>
+
+
+    var playerId = -1;
+    var eventId = "";
+
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    async function ShowNodeChildren(node) {
+      for (let i = 0; i < node.Children.length; i++) {
+        const element = node.Children[i];
+        await ShowNode(element);
+      }
+    }
+
+    async function ShowStyledNode(node, cssProperty) {
+      $(".current").append("<span style=\"" + cssProperty + ":" + node.Value + "\">");
+      await ShowNodeChildren(node.Children);
+      $(".current").append("<\span>");
+    }
+
     async function ShowNode(node) {
       switch (node.Type) {
+
+        case "Color":
+          ShowStyledNode(node, "font-style");
+          break;
+        case "Style":
+          ShowStyledNode(node, "font-style");
+          break;
+        case "FontWeight":
+          ShowStyledNode(node, "font-weight");
+          break;
+        case "Decoration":
+          ShowStyledNode(node, "text-decoration");
+          break;
+        case "FontSize":
+          ShowStyledNode(node, "font-size");
+          break;
         case "Text":
-          $("#output").append(node.Value);
+          $(".current").append(node.Value);
           break;
         case "Break":
-          $("#output").append("<br/>");
+          $(".current").append("<br/>");
           break;
         case "Delay":
           await sleep(node.Time * 1000);
           break;
         case "Sequence":
-          for (let i = 0; i < node.Children.length; i++) {
-            const element = node.Children[i];
-            await ShowNode(element);
-          }
+          await ShowNodeChildren(node);
           break;
       }
     }
 
     async function ShowChoices(choices) {
       //console.log(choices);
-      choices.forEach(function (choice) {
-        choice = "<li> <label><input type=\"radio\" name=\"choice\" value=\"" + choice.Identifier + "\">" + choice.Label + "</label></li>";
-        $("#choices ul").append(choice);
-      });
-      var btns = $("#choices ul li");
+      for (let i = 0; i < choices.length; i++) {
+        const choice = choices[i];
+        var choiceElement = MakeButton("storyChoice",choice.Label, choice.Identifier);
+        $('.current').append(choiceElement);
+      }
+      /*
       btns.hide();
       for (let i = 1; i <= btns.length; i++) {
-        var select = $("#choices ul li:nth-child("+i+")");
+        var select = $("#choices ul li:nth-child(" + i + ")");
         select.show(200);
         await sleep(200);
-      }
+      }*/
 
     }
 
-    var eventId = "";
     async function EmptyContent() {
       $("#sendButton").hide(200);
       await sleep(200);
@@ -57,7 +102,7 @@
       await sleep(200);
       $("#output").hide(200);
       await sleep(300);
-    
+
       $("#choices ul").empty();
       $("#output").empty();
 
@@ -67,13 +112,13 @@
 
     function FetchEventIdPlease() {
       $.ajax({
-        url: "/user/1/getCurrentEventId",
+        url: "/user/" + playerId + "/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
           if (data.Success && data.Content != eventId) {
             console.log("Event changed from " + eventId + " to " + data.Content);
             eventId = data.Content;
-            await EmptyContent();
+            //await EmptyContent();
             FetchEventContent();
           }
         }
@@ -82,11 +127,15 @@
 
     function FetchEventContent() {
       $.ajax({
-        url: "/user/1/getEventContent",
+        url: "/user/" + playerId + "/getEventContent",
         dataType: "jsonp",
         success: async function (data) {
           //console.log(data);
           if (data.Success) {
+            $(".current")
+            .append("<div class=\"current well\"></div>")
+            .removeClass("current");
+
             await ShowNode(data.Content.Script);
             await ShowChoices(data.Content.Choices);
             $("#sendButton").show("slow");
@@ -95,10 +144,79 @@
       });
     }
 
+    function MakeButton(className,text,title){
+      return "<button class=\".btn-primary "+className+"\" title=\""+title+"\">"+text+"</button>";
+    }
+
+    function GetCharactersChoices() {
+      $.ajax({
+        url: "/getCharacters",
+        dataType: "jsonp",
+        success: async function (data) {
+          console.log(data);
+          if (data.Success) {
+            for (const key in data.Content) {
+              const element = data.Content[key];
+              var newEle = "<div class=\"col-md-4\">"
+                + "<h3>" + element.Name + "</h3><br/>" + element.Description + "<br/><button class=\"selectCharacter\">Select</button>"
+                + "</div>";
+              $("#PlayerSelect ul").append(newEle);
+            }
+            $("button.selectCharacter").click(function (btn) {
+              var name = $(btn.target).siblings("h3")[0].innerText;
+              SelectCharacter(name);
+            });
+          }
+        }
+      });
+    }
+
+    function SelectCharacter(name) {
+      $.ajax({
+        url: "/GetNewPlayerId/" + name,
+        dataType: "jsonp",
+        success: async function (data) {
+          console.log(data);
+          if (data.Success) {
+            playerId = data.Content.Identifier;
+            GoToGame();
+          }
+        }
+      });
+    }
+
+
+    function FetchPlayerInfo() {
+      $.ajax({
+        url: "/user/" + playerId + "/getPlayer",
+        dataType: "jsonp",
+        success: async function (data) {
+          console.log(data);
+          if (data.Success) {
+            $("#characterName h2").empty().append(data.Content.Character.Name);
+            $("#characterObjectif h2").empty().append(data.Content.Character.Objective);
+            $("#notes").empty().append(data.Content.Notes);
+          }
+        }
+      });
+    }
+
+    async function GoToGame() {
+      $("#PlayerSelect").hide(100);
+      await sleep(100);
+      $("#GameScreen").show(500);
+
+      setInterval(FetchEventIdPlease, 500);
+      setInterval(FetchPlayerInfo, 1000);
+    }
+
 
     $(document).ready(function () {
-      setInterval(FetchEventIdPlease, 500);
+      //PlayerSelect
+      GetCharactersChoices();
 
+      //Game
+      $("#GameScreen").hide();
       $("#sendButton").hide();
 
       $("button").click(function () {
@@ -108,13 +226,6 @@
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
-            if (data.Success) {
-              /*
-              await ShowNode(data.Content.Script);
-              ShowChoices(data.Content.Choices);
-              $("#sendButton").show("slow");
-              */
-            }
           }
         });
       });
@@ -125,15 +236,43 @@
   </script>
 </head>
 
+
+
+
+
 <body>
 
-  <div id="output"></div>
-  <div id="choices">
-    <ul>
-    </ul>
-    <button id="sendButton">Send</button><br><br>
-  </div>
+  <div class="container">
 
+    <div id="PlayerSelect">
+      <ul>
+
+      </ul>
+    </div>
+
+
+
+    <div id="GameScreen">
+      <div class="page-header">
+        <div class="row">
+          <div id="characterName" class="col-md-4">
+            <h2></h2>
+          </div>
+          <div id="characterObjectif" class="col-md-8">
+            <h2></h2>
+          </div>
+        </div>
+        <div id="notes"></div>
+      </div>
+
+      <hr />
+
+      <div id="output">
+        <div class="current"></div>
+      </div>
+    </div>
+
+  </div>
 </body>
 
 </html>

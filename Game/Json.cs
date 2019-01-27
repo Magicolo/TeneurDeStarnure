@@ -1,19 +1,27 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace Game
 {
 	public static class Json
 	{
-		public static JObject ToJson(this Event @event) => JObject.FromObject(new
+		sealed class EventConverter : JsonConverter<Event>
 		{
-			@event.Identifier,
-			Script = @event.Script.Build(@event.Script),
-			@event.Choices
-		});
+			public override Event ReadJson(JsonReader reader, Type objectType, Event existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+				throw new NotImplementedException();
 
-		public static JObject ToJson(this Result @object) => JObject.FromObject(@object);
-		public static JToken ToJson<T>(this T value) => JToken.FromObject(value);
-		public static string Serialize(this object @object) => JsonConvert.SerializeObject(@object);
+			public override void WriteJson(JsonWriter writer, Event value, JsonSerializer serializer) => JObject.FromObject(new
+			{
+				value.Identifier,
+				Script = value.Script.Build(value.Script),
+				value.Choices
+			}).WriteTo(writer);
+
+			public override bool CanRead => false;
+			public override bool CanWrite => true;
+		}
+
+		public static string Serialize<T>(this T value) => JsonConvert.SerializeObject(value, new EventConverter());
 	}
 }
