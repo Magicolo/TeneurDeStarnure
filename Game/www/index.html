@@ -96,6 +96,7 @@
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
+			eventId = "";
           }
         });
       });
@@ -144,7 +145,7 @@
               .append("<div class=\"current well\"></div>");
 
             await ShowNode(data.Content.Script);
-            await sleep(2000);
+			await sleep(2000);
             await ShowChoices(data.Content.Choices);
             $(".current").animate({
               scrollTop: $(".current").height() + 1000 - $(".current").height()
