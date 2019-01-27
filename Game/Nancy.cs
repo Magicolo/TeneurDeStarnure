@@ -47,12 +47,10 @@ namespace Game
 
 
 			//answer
-			Get["/user/{id}/answer/{answerId}"] = value =>
+			Get["/user/{id}/globalId/{globalId}/answer/{answerId}"] = parameters =>
 			{
-				var request = this.Bind<RequestObject>();
-				Console.WriteLine($"Receiving answer {request.AnswerId} from {request.Id}");
-				var answer = Kevin.ChooseEventChoice(request.Id, request.AnswerId);
-				return JsonResponse(answer);
+				Console.WriteLine($"Receiving answer {parameters.AnswerId} from {parameters.Id} at global Id {parameters.globalId}");
+				return JsonResponse(Kevin.ChooseEventChoice(parameters.globalId,parameters.Id, parameters.AnswerId));
 			};
 
 		}
@@ -74,7 +72,15 @@ namespace Game
 					{ "Content-Type", "application/json" }
 					//{ "X-Custom-Header", "Sup?" }
 				},
-				Contents = c => c.Write(jsonBytes, 0, jsonBytes.Length)
+				Contents = c =>
+				{
+					try
+					{
+						c.Write(jsonBytes, 0, jsonBytes.Length);
+					}
+					catch (Exception e) { 
+					}
+				}
 			};
 		}
 	}

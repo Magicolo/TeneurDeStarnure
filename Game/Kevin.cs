@@ -62,7 +62,7 @@ namespace Game
 		public Event Event = MainStory.Vestibule;
 		public string LastChoice = "";
 		public Node LastOutcome = Node.Text("");
-		public int Counter;
+		public int Counter = 1;
 	}
 
 	public static class Kevin
@@ -86,9 +86,12 @@ namespace Game
 			return Failures.InvalidCharacter;
 		}
 
-		public static Result ChooseEventChoice(string playerId, string choiceId)
+		public static Result ChooseEventChoice(string globalId, string playerId, string choiceId)
 		{
 			if (State.Event == null) return Failures.CurrentEventNotFound;
+
+			if(globalId != (State.Counter + ""))
+				return Failures.InvalidChoice;
 
 			var choice = State.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
@@ -113,7 +116,7 @@ namespace Game
 
 		public static Result GetCharacters() => State.Characters.ToSuccess();
 		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier is string identifier ?
-			(identifier + State.Counter).ToSuccess() : Failures.CurrentEventNotFound;
+			(State.Counter).ToSuccess() : Failures.CurrentEventNotFound;
 		public static (Result, State, Player) GetCurrentEvent(string playerId)
 		{
 			if (State.Players.TryGetValue(playerId, out var player))

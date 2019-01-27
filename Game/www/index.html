@@ -153,7 +153,7 @@
         var choiceId = btn.target.title;
         $("button.storyChoice").remove();
         $.ajax({
-          url: "/user/" + playerId + "/answer/" + choiceId,
+          url: "/user/" + playerId + "/globalId/" + eventId +"/answer/" + choiceId,
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
