@@ -64,7 +64,7 @@ namespace Game
 			new Choice("Go to kitchen.",
 				Line("Perhaps it is time to make dinner. You go to the kitchen."),
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
-				null
+				Effect.GoTo(nameof(Kitchen))
 			),
 			new Choice("Tell Lau to shut up.",
 				Line("You scream to yourself to shut the hell up, but you're not there to answer."),

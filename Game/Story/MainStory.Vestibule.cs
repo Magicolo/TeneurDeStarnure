@@ -29,6 +29,11 @@ namespace Game
 				Line("You feel compelled to go to the study and go."),
 				Condition.IsCharacter(Characters.Dad),
 				Effect.GoTo(nameof(Study))
+			),
+			new Choice("Go to kitchen.",
+				Line("Perhaps it is time to make dinner. You go to the kitchen."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
+				Effect.GoTo(nameof(Kitchen))
 			)
 		);
 	}
