@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -78,6 +79,7 @@ namespace Game
 					Character = character,
 					Notes = { }
 				};
+				Console.WriteLine("A player is " + character.Name + " with id " + identifier);
 				return player.ToSuccess();
 			}
 
@@ -93,6 +95,7 @@ namespace Game
 
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
+				Console.WriteLine($"Player {playerId} of character {player.Character.Identifier} hasn chosen #{choiceId}.");
 				State.LastChoice = $"{player.Character.Identifier} has chosen {choice.Label}.";
 				State.LastOutcome = choice.Outcome;
 				choice.Effect(State);

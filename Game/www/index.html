@@ -145,7 +145,7 @@
         const choice = choices[i];
         var choiceElement = MakeButton("storyChoice", choice.Label, choice.Identifier);
         $('.current').append(choiceElement);
-        $('.current :last').hide().show(200);
+        $('.current :last').hide().fadeIn(200);
         await sleep(200);
       }
 
@@ -221,11 +221,11 @@
 
             //Last Outcome
             if (HasContent(data.Content.LastOutcome)) {
-				await ShowNode(data.Content.LastOutcome);
+              await ShowNode(data.Content.LastOutcome);
               //var lastOutcome = "<p class=\"newLastOutcome\">" + data.Content.LastOutcome + "</p>";
               //$(".current").append(lastOutcome);
               //$(".newLastOutcome").hide().fadeIn(600);
-				await sleep(1000);
+              await sleep(1000);
               //$(".newLastOutcome").removeClass("newLastOutcome");
             }
 
@@ -235,8 +235,11 @@
               .append("<div class=\"current well\"></div>");
 
 
-$(".current").append("<div class=\"outputRoom\">"+data.Content.Identifier+"</div>");
-            $("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
+            $(".current").append("<div class=\"outputRoom\">" + data.Content.Identifier + "</div>");
+            $(".current .outputRoom").hide().fadeIn(300);
+            await sleep(500);
+            
+            $("#roomName span").empty().append(data.Content.Identifier).hide().fadeIn(200);
             await sleep(200);
             await ShowNode(data.Content.Script);
             await sleep(1000);
@@ -281,6 +284,7 @@ $(".current").append("<div class=\"outputRoom\">"+data.Content.Identifier+"</div
           //console.log(data);
           if (data.Success) {
             playerId = data.Content.Identifier;
+            console.log("Im " + name + " with player id " + playerId);
             GoToGame();
           }
         }
@@ -409,7 +413,7 @@ $(".current").append("<div class=\"outputRoom\">"+data.Content.Identifier+"</div
 
   <div class="container">
 
-      
+
     <div id="PlayerSelect">
       <center>
         <h1>The Coldest Winter</h1>
@@ -452,7 +456,7 @@ $(".current").append("<div class=\"outputRoom\">"+data.Content.Identifier+"</div
       </div>
 
       <div id="output" class="scroll">
-        <div class="current well"></div>
+        <div class="current"></div>
       </div>
     </div>
 
