@@ -59,6 +59,11 @@ namespace Game
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomKitchen >= 2 && state.DadKitchen >= 2,
 				Effect.GoTo(nameof(ColdEnding))
 			),
+			new Choice("Go to the living room.",
+				Line("You feel compelled to go to the living room and go."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.DadKitchen < 2,
+				Effect.GoTo(nameof(LivingRoom))
+			),
 
 			new Choice("Grab towel.",
 				Line("It's soft."),
@@ -83,6 +88,11 @@ namespace Game
 				),
 				(state, player) => player.Character.Identifier == Characters.Dad && state.MomKitchen == 2 && state.DadKitchen == 2,
 				Effect.GoTo(nameof(HotEnding))
+			),
+			new Choice("Go to the study.",
+				Line("You feel compelled to go to the study and go."),
+				(state, player) => player.Character.Identifier == Characters.Dad && state.DadKitchen < 2,
+				Effect.GoTo(nameof(Study))
 			)
 		);
 	}

@@ -50,6 +50,11 @@ namespace Game
 				Condition.IsCharacter(Characters.Mom),
 				Effect.GoTo(nameof(LivingRoom))
 			),
+			new Choice("Go to kitchen.",
+				Line("Perhaps it is time to make dinner. You go to the kitchen."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
+				null
+			),
 
 			new Choice("Sit at desk.",
 				Line("The feeling of unfinished business draws your butt toward the chair."),

@@ -44,21 +44,26 @@ namespace Game
 			new Choice("Sit on the couch.",
 				Line("There's still a groove."),
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 0,
-				state => { state.MomLivingRoom++; state.DadLivingRoom = 0; }
+				state => state.MomLivingRoom++
 			),
 			new Choice("Take all the pills on coffee table.",
 				Line("You put the pills in your mouth but it's so cold in there that they just stick to your tongue and cheeks. You mouth is full of pills now."),
-				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 0,
-				null
-			),
-			new Choice("Watch soap opera.",
-				Line("The snow slept with the sleet and doesn't want to tell the ice. Anyway, the ice is a frigid bitch."),
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 1,
 				state => state.MomLivingRoom++
 			),
 			new Choice("Watch soap opera.",
+				Line("The snow slept with the sleet and doesn't want to tell the ice. Anyway, the ice is a frigid bitch."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 1,
+				null
+			),
+			new Choice("Watch soap opera.",
 				Line("It's the snow channel episode."),
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 2,
+				null
+			),
+			new Choice("Go to kitchen.",
+				Line("Perhaps it is time to make dinner. You go to the kitchen."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
 				null
 			),
 			new Choice("Tell Lau to shut up.",
@@ -70,7 +75,7 @@ namespace Game
 			new Choice("Sit on my chair.",
 				Line("You sit on Dad's chair. For the first time."),
 				(state, player) => player.Character.Identifier == Characters.Dad && state.DadLivingRoom == 0,
-				state => { state.DadLivingRoom++; state.MomLivingRoom = 0; }
+				state => state.DadLivingRoom++
 			),
 			new Choice("Watch Jeopardy.",
 				Line("You turn on the television... 'This ancient evil spirit caused a global temperature change of -60 degrees Celsius.'"),
@@ -85,7 +90,7 @@ namespace Game
 			new Choice("Go to the study.",
 				Line("You feel compelled to go to the study and go."),
 				Condition.IsCharacter(Characters.Dad),
-				Effect.GoTo(nameof(Study)) + (state => state.DadLivingRoom = 0)
+				Effect.GoTo(nameof(Study))
 			)
 		);
 	}
