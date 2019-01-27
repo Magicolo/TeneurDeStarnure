@@ -28,6 +28,14 @@
     .scroll {
       overflow-y: scroll;
     }
+
+    .lastAction{
+      color:gray;
+      margin-bottom:2px;
+      padding-top:10px;
+      padding-bottom:2px;
+      font-style: italic;
+    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -140,7 +148,9 @@
         url: "/user/" + playerId + "/getCurrentEventId",
         dataType: "jsonp",
         success: async function (data) {
-          console.log(data);
+          if (!data.Success)
+            console.log(data);
+
           if (data.Success && data.Content != eventId) {
             console.log("Event changed from " + eventId + " to " + data.Content);
             $("button.storyChoice").remove();
@@ -159,14 +169,22 @@
         success: async function (data) {
           console.log(data);
           if (data.Success) {
+            $(".current button").remove();
+            var newNode = "<p class=\"lastAction newLastChoice\">" + data.Content.LastChoice + "</p>";
+            $(".current").append(newNode);
+            $(".newLastChoice").hide().show(600);
+            await sleep(600);
+            $(".newLastChoice").removeClass("newLastChoice");
+
             $(".current")
               .removeClass("current")
               .parent()
               .append("<div class=\"current well\"></div>");
 
-            
-            //$("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
-            //await sleep(200);
+
+
+            $("#roomName span").empty().append(data.Content.Identifier).hide().show(200);
+            await sleep(200);
             await ShowNode(data.Content.Script);
             await sleep(1000);
             await ShowChoices(data.Content.Choices);
@@ -246,10 +264,10 @@
       $("#PlayerSelect").hide(100);
       await sleep(100);
       $("#GameScreen").show(500);
-      
+
       FetchPlayerInfo();
       await sleep(100);
-      
+
       setInterval(FetchEventIdPlease, 500);
       setInterval(FetchPlayerInfo, 1000);
       setInterval(CheckScroll, 200);
