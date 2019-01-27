@@ -7,9 +7,10 @@ namespace Game
 		public static readonly Event ApproachThePyramid = new Event(
 			nameof(ApproachThePyramid),
 			Sequence(
-				Line("You suddenly face an unexpected pyramid that seemed like it came out of nowhere!"),
+				Line("You suddenly face an unexpected pyramid that seemed like it came out of nowhere!").Color(200, 50, 50),
 				Delay(1f),
-				Text("You approach prudently"), Text("....").Typewrite(3f), Break()),
+				Text("You approach prudently"), Text("....").Thickness(1000).Typewrite(3f), Break())
+			.Typewrite(),
 			("Open the door", Effect.GoTo(nameof(EnterThePyramid))),
 			("Run away", Effect.GoTo(nameof(RunAwayFromThePyramid))),
 			("Knock on the door", Effect.GoTo(nameof(KnockOnThePyramidDoor))));
@@ -17,7 +18,7 @@ namespace Game
 		public static readonly Event EnterThePyramid = new Event(
 			nameof(EnterThePyramid),
 			Sequence(
-				Line("You try to enter the pyramid, but a strange force prevents you from going in.")
+				Line("You try to enter the pyramid, but a strange force prevents you from going in.").Bold()
 			)
 			.Typewrite(),
 			("Look left", Effect.GoTo(nameof(NoticeSuspiciousBush))),
@@ -32,9 +33,9 @@ namespace Game
 		public static readonly Event KnockOnThePyramidDoor = new Event(
 			nameof(KnockOnThePyramidDoor),
 			Sequence(
-				Line("You knock on the door of the pyramid...."),
+				Line("You knock on the door of the pyramid....").Italic(),
 				Delay(2f),
-				Line("But nothing happens."))
+				Line("But nothing happens.").Underline())
 			.Typewrite(),
 			("Run away", Effect.GoTo(nameof(RunAwayFromThePyramid))),
 			("Look left", Effect.GoTo(nameof(NoticeSuspiciousBush))));
@@ -42,7 +43,7 @@ namespace Game
 		public static readonly Event NoticeSuspiciousBush = new Event(
 			nameof(NoticeSuspiciousBush),
 			Sequence(
-				Line("You notice a suspicious bush.")
+				Line("You notice a suspicious bush.").LineThrough()
 			)
 			.Typewrite(),
 			("Run away", Effect.GoTo(nameof(RunAwayFromThePyramid))),
@@ -51,7 +52,7 @@ namespace Game
 		public static readonly Event ApproachTheBush = new Event(
 			nameof(ApproachTheBush),
 			Sequence(
-				Line("You approach the bush."),
+				Line("You approach the bush.").Oblique(),
 				Line("It is a pretty normal bush...."))
 			.Typewrite(),
 			("Go back to the pyramid", Effect.GoTo(nameof(ApproachThePyramid))));
