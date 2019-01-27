@@ -63,14 +63,14 @@ namespace Game
 
 	public static class Kevin
 	{
-		static readonly State _state = new State();
+		public static readonly State State = new State();
 
 		public static Result GetNewPlayerId(string characterId)
 		{
-			if (_state.Characters.TryGetValue(characterId, out var character))
+			if (State.Characters.TryGetValue(characterId, out var character))
 			{
-				var identifier = (_state.Players.Count + 1).ToString();
-				var player = _state.Players[identifier] = new Player
+				var identifier = (State.Players.Count + 1).ToString();
+				var player = State.Players[identifier] = new Player
 				{
 					Identifier = identifier,
 					Character = character,
@@ -84,23 +84,23 @@ namespace Game
 
 		public static Result ChooseEventChoice(string playerId, string choiceId)
 		{
-			if (_state.Event == null) return Failures.CurrentEventNotFound;
+			if (State.Event == null) return Failures.CurrentEventNotFound;
 
-			var choice = _state.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
+			var choice = State.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
 			if (choice == null) return Failures.InvalidChoice;
 
-			choice.Effect(_state);
+			choice.Effect(State);
 			return "".ToSuccess();
 		}
 
 		public static Result GetPlayer(string playerId) =>
-			_state.Players.TryGetValue(playerId, out var player) ? player.ToSuccess() : Failures.PlayerNotFound;
+			State.Players.TryGetValue(playerId, out var player) ? player.ToSuccess() : Failures.PlayerNotFound;
 
-		public static Result GetState() => _state.ToSuccess();
+		public static Result GetState() => State.ToSuccess();
 
-		public static Result GetCharacters() => _state.Characters.ToSuccess();
-		public static Result GetCurrentEventId(string playerId) => _state.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetCurrentEvent(string playerId) => _state.Event?.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCharacters() => State.Characters.ToSuccess();
+		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCurrentEvent(string playerId) => State.Event?.ToSuccess() ?? Failures.CurrentEventNotFound;
 		public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
 	}
 }

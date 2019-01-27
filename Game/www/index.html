@@ -42,7 +42,7 @@
 
     async function ShowStyledNode(node, cssProperty) {
       $(".current").append("<span style=\"" + cssProperty + ":" + node.Value + "\">");
-      await ShowNodeChildren(node.Children);
+      await ShowNodeChildren(node);
       $(".current").append("<\span>");
     }
 
@@ -50,7 +50,7 @@
       switch (node.Type) {
 
         case "Color":
-          ShowStyledNode(node, "font-style");
+          ShowStyledNode(node, "color");
           break;
         case "Style":
           ShowStyledNode(node, "font-style");
@@ -145,7 +145,7 @@
               .append("<div class=\"current well\"></div>");
 
             await ShowNode(data.Content.Script);
-			await sleep(2000);
+			await sleep(1000);
             await ShowChoices(data.Content.Choices);
             $(".current").animate({
               scrollTop: $(".current").height() + 1000 - $(".current").height()
