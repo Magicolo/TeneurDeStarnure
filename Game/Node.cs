@@ -36,7 +36,7 @@ namespace Game
 		public static Node Overline(this Node node) => Node.Decoration("overline", node);
 		public static Node Underline(this Node node) => Node.Decoration("underline", node);
 		public static Node LineThrough(this Node node) => Node.Decoration("line-through", node);
-		public static Node Color(byte red, byte green, byte blue) => Node.Color($"rgb({red}, {green}, {blue})");
+		public static Node Color(this Node node, byte red, byte green, byte blue) => Node.Color($"rgb({red}, {green}, {blue})", node);
 	}
 
 	public sealed class Node
@@ -65,35 +65,60 @@ namespace Game
 		public static Node Style(string value, params Node[] children) => new Node(
 			new Data.Style { Value = value },
 			node => node.Data is Data.Style data ?
-				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				JObject.FromObject(new
+				{
+					Type = data.GetType().Name,
+					data.Value,
+					Children = node.Children.Select(child => child.Build(child)).ToArray()
+				}) :
 				default,
 			children);
 
 		public static Node FontWeight(string value, params Node[] children) => new Node(
 			new Data.FontWeight { Value = value },
 			node => node.Data is Data.FontWeight data ?
-				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				JObject.FromObject(new
+				{
+					Type = data.GetType().Name,
+					data.Value,
+					Children = node.Children.Select(child => child.Build(child)).ToArray()
+				}) :
 				default,
 			children);
 
 		public static Node FontSize(string value, params Node[] children) => new Node(
 			new Data.FontSize { Value = value },
 			node => node.Data is Data.FontSize data ?
-				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				JObject.FromObject(new
+				{
+					Type = data.GetType().Name,
+					data.Value,
+					Children = node.Children.Select(child => child.Build(child)).ToArray()
+				}) :
 				default,
 			children);
 
 		public static Node Decoration(string value, params Node[] children) => new Node(
 			new Data.Decoration { Value = value },
 			node => node.Data is Data.Decoration data ?
-				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				JObject.FromObject(new
+				{
+					Type = data.GetType().Name,
+					data.Value,
+					Children = node.Children.Select(child => child.Build(child)).ToArray()
+				}) :
 				default,
 			children);
 
 		public static Node Color(string value, params Node[] children) => new Node(
 			new Data.Color { Value = value },
 			node => node.Data is Data.Color data ?
-				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
+				JObject.FromObject(new
+				{
+					Type = data.GetType().Name,
+					data.Value,
+					Children = node.Children.Select(child => child.Build(child)).ToArray()
+				}) :
 				default,
 			children);
 
