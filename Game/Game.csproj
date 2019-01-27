@@ -66,6 +66,7 @@
     <Compile Include="Story\DoggoEpisode.cs" />
     <Compile Include="Story\MainStory.Study.cs" />
     <Compile Include="Story\MainStory.LivingRoom.cs" />
+    <Compile Include="Story\MainStory.Kitchen.cs" />
     <Compile Include="Story\MainStory.Vestibule.cs" />
     <Compile Include="Story\Story.cs" />
     <Compile Include="WebServer.cs" />

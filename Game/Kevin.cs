@@ -61,6 +61,7 @@ namespace Game
 		public Event Event = MainStory.Vestibule;
 		public string LastChoice = "";
 		public Node LastOutcome = Node.Text("");
+		public int Counter;
 	}
 
 	public static class Kevin
@@ -93,6 +94,7 @@ namespace Game
 
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
+				State.Counter++;
 				State.LastChoice = $"'{player.Character.Identifier}' has chosen '{choice.Label}'.";
 				State.LastOutcome = choice.Outcome;
 				choice.Effect(State);
@@ -108,7 +110,8 @@ namespace Game
 		public static Result GetState() => State.ToSuccess();
 
 		public static Result GetCharacters() => State.Characters.ToSuccess();
-		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier is string identifier ?
+			(identifier + State.Counter).ToSuccess() : Failures.CurrentEventNotFound;
 		public static (Result, State, Player) GetCurrentEvent(string playerId)
 		{
 			if (State.Players.TryGetValue(playerId, out var player))
