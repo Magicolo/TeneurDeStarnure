@@ -153,7 +153,7 @@
         var choiceId = btn.target.title;
         $("button.storyChoice").remove();
         $.ajax({
-          url: "/user/1/answer/" + choiceId,
+          url: "/user/" + playerId + "/answer/" + choiceId,
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
@@ -222,11 +222,7 @@
             //Last Outcome
             if (HasContent(data.Content.LastOutcome)) {
               await ShowNode(data.Content.LastOutcome);
-              //var lastOutcome = "<p class=\"newLastOutcome\">" + data.Content.LastOutcome + "</p>";
-              //$(".current").append(lastOutcome);
-              //$(".newLastOutcome").hide().fadeIn(600);
               await sleep(1000);
-              //$(".newLastOutcome").removeClass("newLastOutcome");
             }
 
             $(".current")
@@ -238,7 +234,7 @@
             $(".current").append("<div class=\"outputRoom\">" + data.Content.Identifier + "</div>");
             $(".current .outputRoom").hide().fadeIn(300);
             await sleep(500);
-            
+
             $("#roomName span").empty().append(data.Content.Identifier).hide().fadeIn(200);
             await sleep(200);
             await ShowNode(data.Content.Script);
