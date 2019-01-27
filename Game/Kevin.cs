@@ -53,12 +53,12 @@ namespace Game
 			//	Objective = "Rain."
 			//},
 		}).ToDictionary(character => character.Name);
-		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+		public readonly Dictionary<string, Event> Events = typeof(MainStory).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
-		public Event Event = DoggoEpisode.Vestibule;
+		public Event Event = MainStory.Vestibule;
 		public string LastChoice = "";
 		public Node LastOutcome = Node.Text("");
 	}
@@ -109,7 +109,13 @@ namespace Game
 
 		public static Result GetCharacters() => State.Characters.ToSuccess();
 		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetCurrentEvent(string playerId) => State.Event?.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static (Result, State, Player) GetCurrentEvent(string playerId)
+		{
+			if (State.Players.TryGetValue(playerId, out var player))
+				return (State.Event?.ToSuccess() ?? Failures.CurrentEventNotFound, State, player);
+
+			return (Failures.PlayerNotFound, State, new Player());
+		}
 		public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
 	}
 }
