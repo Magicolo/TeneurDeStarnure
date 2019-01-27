@@ -36,15 +36,27 @@ namespace Game
 		public static Node Overline(this Node node) => Node.Decoration("overline", node);
 		public static Node Underline(this Node node) => Node.Decoration("underline", node);
 		public static Node LineThrough(this Node node) => Node.Decoration("line-through", node);
-		public static Node Color(this Node node, byte red, byte green, byte blue) => Node.Color($"rgb({red}, {green}, {blue})", node);
+		public static Node Color(this Node node, byte red, byte green, byte blue) => Node.Color($"rgb({red},{green},{blue})", node);
 	}
 
 	public sealed class Node
 	{
+		public static Node State(Func<State, string> get) => new Node(
+			new Data.State { Get = get },
+			(node, state) =>
+			{
+				if (node.Data is Data.State data)
+				{
+					node = Text(data.Get(state));
+					return node.Build(node, state);
+				}
+				return default;
+			});
+
 		public static Node Text(char value) => Text(value.ToString());
 		public static Node Text(string value) => new Node(
 			new Data.Text { Value = value },
-			node => node.Data is Data.Text data ?
+			(node, _) => node.Data is Data.Text data ?
 				JObject.FromObject(new { Type = data.GetType().Name, data.Value }) :
 				default);
 
@@ -52,72 +64,72 @@ namespace Game
 
 		public static Node Break() => new Node(
 			new Data.Break(),
-			node => node.Data is Data.Break data ?
+			(node, _) => node.Data is Data.Break data ?
 				JObject.FromObject(new { Type = data.GetType().Name }) :
 				default);
 
 		public static Node Delay(float time) => new Node(
 			new Data.Delay { Time = time },
-			node => node.Data is Data.Delay data ?
+			(node, _) => node.Data is Data.Delay data ?
 				JObject.FromObject(new { Type = data.GetType().Name, data.Time }) :
 				default);
 
 		public static Node Style(string value, params Node[] children) => new Node(
 			new Data.Style { Value = value },
-			node => node.Data is Data.Style data ?
+			(node, state) => node.Data is Data.Style data ?
 				JObject.FromObject(new
 				{
 					Type = data.GetType().Name,
 					data.Value,
-					Children = node.Children.Select(child => child.Build(child)).ToArray()
+					Children = node.Children.Select(child => child.Build(child, state)).ToArray()
 				}) :
 				default,
 			children);
 
 		public static Node FontWeight(string value, params Node[] children) => new Node(
 			new Data.FontWeight { Value = value },
-			node => node.Data is Data.FontWeight data ?
+			(node, state) => node.Data is Data.FontWeight data ?
 				JObject.FromObject(new
 				{
 					Type = data.GetType().Name,
 					data.Value,
-					Children = node.Children.Select(child => child.Build(child)).ToArray()
+					Children = node.Children.Select(child => child.Build(child, state)).ToArray()
 				}) :
 				default,
 			children);
 
 		public static Node FontSize(string value, params Node[] children) => new Node(
 			new Data.FontSize { Value = value },
-			node => node.Data is Data.FontSize data ?
+			(node, state) => node.Data is Data.FontSize data ?
 				JObject.FromObject(new
 				{
 					Type = data.GetType().Name,
 					data.Value,
-					Children = node.Children.Select(child => child.Build(child)).ToArray()
+					Children = node.Children.Select(child => child.Build(child, state)).ToArray()
 				}) :
 				default,
 			children);
 
 		public static Node Decoration(string value, params Node[] children) => new Node(
 			new Data.Decoration { Value = value },
-			node => node.Data is Data.Decoration data ?
+			(node, state) => node.Data is Data.Decoration data ?
 				JObject.FromObject(new
 				{
 					Type = data.GetType().Name,
 					data.Value,
-					Children = node.Children.Select(child => child.Build(child)).ToArray()
+					Children = node.Children.Select(child => child.Build(child, state)).ToArray()
 				}) :
 				default,
 			children);
 
 		public static Node Color(string value, params Node[] children) => new Node(
 			new Data.Color { Value = value },
-			node => node.Data is Data.Color data ?
+			(node, state) => node.Data is Data.Color data ?
 				JObject.FromObject(new
 				{
 					Type = data.GetType().Name,
 					data.Value,
-					Children = node.Children.Select(child => child.Build(child)).ToArray()
+					Children = node.Children.Select(child => child.Build(child, state)).ToArray()
 				}) :
 				default,
 			children);
@@ -134,20 +146,20 @@ namespace Game
 			if (nodes.Length == 1) return nodes[0];
 			return new Node(
 				new Data.Sequence(),
-				node => node.Data is Data.Sequence data ?
+				(node, state) => node.Data is Data.Sequence data ?
 					JObject.FromObject(new
 					{
 						Type = data.GetType().Name,
-						Children = Children(node).Select(child => child.Build(child)).ToArray()
+						Children = Children(node).Select(child => child.Build(child, state)).ToArray()
 					}) :
 					default,
 				nodes);
 		}
 
 		public readonly IData Data;
-		public readonly Func<Node, JObject> Build;
+		public readonly Func<Node, State, JObject> Build;
 		public readonly Node[] Children;
-		public Node(IData data, Func<Node, JObject> build, params Node[] children)
+		public Node(IData data, Func<Node, State, JObject> build, params Node[] children)
 		{
 			Data = data;
 			Build = build;
@@ -159,6 +171,7 @@ namespace Game
 
 	namespace Data
 	{
+		public struct State : IData { public Func<Game.State, string> Get; }
 		public struct Delay : IData { public float Time; }
 		public struct Text : IData { public string Value; }
 		public struct Break : IData { }

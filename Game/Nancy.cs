@@ -57,7 +57,7 @@ namespace Game
 
 		}
 
-		public Response JsonResponse(Result result) => JsonResponse(result.Serialize());
+		public Response JsonResponse(Result result) => JsonResponse(result.Serialize(Kevin.State));
 
 		public Response JsonResponse(string jsonString)
 		{

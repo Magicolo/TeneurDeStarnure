@@ -44,7 +44,7 @@ namespace Game
         //}
 
         public static Event Vestibule = new Event(nameof(Vestibule),
-                Line("Welp. I'm home.").Color(255,0,0).Typewrite(),
+                Line("Welp. I'm home.").Color(200, 200, 0),
                     ("Hang up coat.", Effect.GoTo(nameof(TakeOffCoat))),
                     ("Snow in July... At least it's an interesting apocalypse.", Effect.GoTo(nameof(Vestibule))),
                     ("Go to the living room", Effect.GoTo(nameof(LivingRoomMain)))
@@ -52,7 +52,7 @@ namespace Game
         );
 
         public static Event TakeOffCoat = new Event(nameof(TakeOffCoat),
-                Line("Might as well feel physically comfortable.").Typewrite(),
+                Line("Might as well feel physically comfortable."),
                     ("Put coat back on.", Effect.GoTo(nameof(PutOnCoat))),
                     ("Take off boots.", Effect.GoTo(nameof(TakeOffBoots))),
                     ("Go to the living room", Effect.GoTo(nameof(LivingRoomMain)))
@@ -60,7 +60,7 @@ namespace Game
         );
 
         public static Event PutOnCoat = new Event(nameof(PutOnCoat),
-               Line("I can't belive how cold it's gotten. The end really is coming.").Typewrite(),
+               Line("I can't belive how cold it's gotten. The end really is coming."),
                    ("Hang up coat.", Effect.GoTo(nameof(TakeOffCoat))),
                    ("Take off boots.", (state, _) => state.BootsOn == true, Effect.GoTo(nameof(TakeOffBoots))),
                    ("Go to the living room", Condition.IsCharacter(Characters.Dog | Characters.Mom), Effect.GoTo(nameof(LivingRoomMain)))
@@ -68,7 +68,7 @@ namespace Game
        );
 
         public static Event TakeOffBoots = new Event(nameof(TakeOffBoots),
-                Line("Mom would be pretty pissed if she saw me in the house with them on.").Typewrite(),
+                Line("Mom would be pretty pissed if she saw me in the house with them on."),
                     ("Hang up coat.", Effect.GoTo(nameof(TakeOffCoat))),
                     ("Put boots back on.", Effect.GoTo(nameof(PutOnBoots))),
                     ("Go to the living room", Effect.GoTo(nameof(LivingRoomMain)))
@@ -76,15 +76,15 @@ namespace Game
         );
 
         public static Event PutOnBoots = new Event(nameof(PutOnBoots),
-                Line("Might as well feel physically comfortable.").Typewrite(),
+                Line("Might as well feel physically comfortable."),
                     ("Hang up coat.", Effect.GoTo(nameof(TakeOffCoat))),
                     ("Take off boots.", Effect.GoTo(nameof(TakeOffBoots))),
                     ("Go to the living room", Effect.GoTo(nameof(LivingRoomMain)))
 
         );
         public static Event LivingRoomMain = new Event(nameof(LivingRoomMain),
-                Line("I still don't feel like I belong here. They still have the dog bed here? It's been here for what, thirty years? Oh jeeze. I'm old.").Typewrite(),
-                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(OutTheWindow))),
+                Line("I still don't feel like I belong here. They still have the dog bed here? It's been here for what, thirty years? Oh jeeze. I'm old."),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Go to the vestibule.", Effect.GoTo(nameof(Vestibule))),
                     ("Sit on the couch.", Effect.GoTo(nameof(OnTheCouch))),
                     ("Sit on Dad's chair.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(OnDadsChair))),
@@ -92,8 +92,8 @@ namespace Game
 
         );
         public static Event LivingRoomFromDogBed = new Event(nameof(LivingRoomFromDogBed),
-                Line("That's enough of that. There are places for humans to sit.").Typewrite(),
-                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(OutTheWindow))),
+                Line("That's enough of that. There are places for humans to sit."),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Go to the vestibule.", Effect.GoTo(nameof(Vestibule))),
                     ("Sit on the couch.", Effect.GoTo(nameof(OnTheCouch))),
                     ("Sit on Dad's chair.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(OnDadsChair))),
@@ -101,8 +101,8 @@ namespace Game
 
         );
         public static Event LivingRoomFromCouch = new Event(nameof(LivingRoomFromCouch),
-                Line("What else...?").Typewrite(),
-                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(OutTheWindow))),
+                Line("What else...?"),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Go to the vestibule.", Effect.GoTo(nameof(Vestibule))),
                     ("Sit on the couch.", Effect.GoTo(nameof(OnTheCouch))),
                     ("Sit on Dad's chair.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(OnDadsChair))),
@@ -110,99 +110,58 @@ namespace Game
 
         );
         public static Event DogBed = new Event(nameof(DogBed),
-                Line("I still don't feel like I belong here. They still have the dog bed here? It's been here for what, thirty years? Oh jeeze. I'm old.").Typewrite(),
-                    ("Turn away.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(OutTheWindow))),
-                    ("Yell at dog.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(YellingAtDog))),
-                    ("Sit on the dog bed.", Condition.IsCharacter(Characters.Mom), Effect.GoTo(nameof(SittingOnDogBed))),
-                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(PettingTheDog)))
-
-        );
-        public static Event YellingAtDog = new Event(nameof(YellingAtDog),
-                Sequence(Line("You little piece of shit! Shut up! I hate you! You're ugly and smelly! Die!").Typewrite(), Delay(1.5f), Line ("Ah, catharsis. That's been building up for a while. Not sure what Sifu would think of that, though...")),
-                    ("Turn away.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(OutTheWindow))),
+                Line("I still don't feel like I belong here. They still have the dog bed here? It's been here for what, thirty years? Oh jeeze. I'm old."),
+                    ("Turn away.", Effect.GoTo(nameof(LivingRoomMain))),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
+                    ("Yell at dog.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(TakeOffBoots))),
                     ("Sit on the dog bed.", Condition.IsCharacter(Characters.Mom), Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(PettingTheDog)))
 
         );
         public static Event PettingTheDog = new Event(nameof(PettingTheDog),
-                Line("His fur is wiry. Not even soft at all. Mom would hold him to her face like he was a security blanket.").Typewrite(),
+                Line("His fur is wiry. Not even soft at all. Mom would hold him to her face like he was a security blanket."),
                     ("Turn away.", Effect.GoTo(nameof(LivingRoomMain))),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Yell at dog.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(TakeOffBoots))),
                     ("Sit on the dog bed.", Condition.IsCharacter(Characters.Mom), Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Pet dog more.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(PettingTheDogAgain)))
 
         );
         public static Event PettingTheDogAgain = new Event(nameof(PettingTheDogAgain),
-                Line("Good boy.").Typewrite(),
+                Line("Good boy."),
                     ("Turn away.", Effect.GoTo(nameof(LivingRoomMain))),
+                    ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Yell at dog.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(TakeOffBoots))),
                     ("Sit on the dog bed.", Condition.IsCharacter(Characters.Mom), Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Pet dog more.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(PettingTheDogAgain)))
 
         );
         public static Event SittingOnDogBed = new Event(nameof(SittingOnDogBed),
-                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever.").Typewrite(),
+                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever."),
                     ("Cry", Effect.GoTo(nameof(CryingOnDogBed))),
+                    ("Meditate.", Effect.GoTo(nameof(Vestibule))),
                     ("Stand up.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(PettingTheDog)))
+                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
 
         );
 
         public static Event CryingOnDogBed = new Event(nameof(CryingOnDogBed),
-                Line("Was I so unlovable that not even a beast could find room for me in his heart?").Typewrite(),
-                    ("Get up.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Meditate.", Effect.GoTo(nameof(MeditatingOnDogBed))),
-                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
-
-        );
-
-        public static Event MeditatingOnDogBed = new Event(nameof(MeditatingOnDogBed),
-                Line("...").Typewrite(2),
-                    ("Get up.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Meditate.", Effect.GoTo(nameof(MeditatingOnDogBed))),
-                    ("Recall The Tao.", Effect.GoTo(nameof(PhilosophizingOnDogBed))),
-                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
-
-        );
-
-        public static Event MeditatingAgainOnDogBed = new Event(nameof(MeditatingAgainOnDogBed),
-                Line("...").Typewrite(2),
-                    ("Get up.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Meditate.", Effect.GoTo(nameof(MeditatingAgainOnDogBed))),
-                    ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
-
-        );
-
-        public static Event PhilosophizingOnDogBed = new Event(nameof(PhilosophizingOnDogBed),
-                Line(@"What did the Tao say...? ""Return animosity with virtue."" Sigh. Well, he did make my mother happy. So he must have had good in him somewhere.").Typewrite(),
-                    ("Get up.", Effect.GoTo(nameof(LivingRoomFromDogBed))),
-                    ("Meditate.", Effect.GoTo(nameof(MeditatingAgainOnDogBed))),
+                Line("Ah. That... felt good."),
+                    ("Go to the kitchen.", Effect.GoTo(nameof(TakeOffBoots))),
+                    ("Sit on the dog bed.", Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Pet dog.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
 
         );
 
         public static Event OnTheCouch = new Event(nameof(OnTheCouch),
-                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever.").Typewrite(),
+                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever."),
                     ("Cry", Effect.GoTo(nameof(SittingOnDogBed))),
-                    ("Meditate", Effect.GoTo(nameof(MeditatingOnTheCouch))),
-                    ("Grow beard.", Effect.GoTo(nameof(GrowingBeardOnCouch)) + ((state) => state.BeardLength++)),
-                    ("Get up.", Effect.GoTo(nameof(LivingRoomFromCouch)))
-
-        );
-
-        public static Event GrowingBeardOnCouch = new Event(nameof(GrowingBeardOnCouch),
-                //Line(string.Format("My beard is {0} centimetres long now.", state.BeardLength)).Typewrite(),
-                Line(string.Format("My beard is getting longer...!")).Typewrite(),
-                    ("Cry", Effect.GoTo(nameof(SittingOnDogBed))),
-                    ("Meditate", Effect.GoTo(nameof(MeditatingOnTheCouch))),
-                    ("Grow beard.", Effect.GoTo(nameof(GrowingBeardOnCouch)) + ((state) => state.BeardLength++)),
+                    ("Grow beard.", (state) => state.BeardLength++),
                     ("Get up.", Effect.GoTo(nameof(LivingRoomFromCouch)))
 
         );
         public static Event MeditatingOnTheCouch = new Event(nameof(MeditatingOnTheCouch),
-                Line("...").Typewrite(2),
+                Line("...").Typewrite(),
                     ("Cry", Effect.GoTo(nameof(CryingOnDadsChair))),
                     ("Grow beard.", (state) => state.BeardLength++),
                     ("Meditate", Effect.GoTo(nameof(MeditatingOnTheCouch))),
@@ -211,7 +170,7 @@ namespace Game
         );
 
         public static Event OnDadsChair = new Event(nameof(OnDadsChair),
-                Line("Dad used to sit here every moment he could. I've been too afraid to sit in it. But I'm in my 40s, so there is no chance of a whipping. And yes, he's dead....").Typewrite(),
+                Line("Dad used to sit here every moment he could. I've been too afraid to sit in it. But I'm in my 40s, so there is no chance of a whipping. And yes, he's dead...."),
                     ("Cry", Effect.GoTo(nameof(CryingOnDadsChair))),
                     ("Meditate", Effect.GoTo(nameof(MeditatingOnDadsChair))),
                     ("Watch Jeopardy.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(Jeopardy))),
@@ -220,7 +179,7 @@ namespace Game
         );
 
         public static Event MeditatingOnDadsChair = new Event(nameof(MeditatingOnDadsChair),
-                Line("...").Typewrite(2),
+                Line("...").Typewrite(),
                     ("Cry", Effect.GoTo(nameof(CryingOnDadsChair))),
                     ("Meditate", Effect.GoTo(nameof(CryingOnDadsChair))),
                     ("Watch Jeopardy.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(Jeopardy))),
@@ -229,7 +188,7 @@ namespace Game
         );
 
         public static Event CryingOnDadsChair = new Event(nameof(CryingOnDadsChair),
-                Line("Why was he such a tyrant? Why did he need to make my life so miserable?").Typewrite(),
+                Line("Why was he such a tyrant? Why did he need to make my life so miserable?"),
                     ("Cry", Effect.GoTo(nameof(CryingOnDadsChair))),
                     ("RecallTheTao", Effect.GoTo(nameof(PhilosophizingOnDadsChair))),
                     ("Watch Jeopardy.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(Jeopardy))),
@@ -238,7 +197,7 @@ namespace Game
         );
 
         public static Event PhilosophizingOnDadsChair = new Event(nameof(PhilosophizingOnDadsChair),
-                Line(@"""Behave simply and hold on to purity. Lessen selfishness and restrain desires. Abandon knowledge and your worries are over."" That is so the opposite of my dad. Oh, well.").Typewrite(),
+                Line(@"""Behave simply and hold on to purity. Lessen selfishness and restrain desires. Abandon knowledge and your worries are over."" That is so the opposite of my dad. Oh, well."),
                     ("Meditate", Effect.GoTo(nameof(MeditatingOnDadsChair))),
                     ("Watch Jeopardy.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(Jeopardy))),
                     ("Get up.", Effect.GoTo(nameof(LivingRoomMain)))
@@ -246,7 +205,7 @@ namespace Game
         );
 
         public static Event Jeopardy = new Event(nameof(Jeopardy),
-                Line("This ancient Chinese philosopher is considered the father of Taoism.").Typewrite(),
+                Line("This ancient Chinese philosopher is considered the father of Taoism."),
                     ("Who is Lau Tzu?", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Lau Tzu.", Effect.GoTo(nameof(TakeOffBoots))),
                     ("Warren Buffet.", Effect.GoTo(nameof(SittingOnDogBed))),
@@ -256,7 +215,7 @@ namespace Game
         );
 
         public static Event StopJeopardy = new Event(nameof(StopJeopardy),
-                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever.").Typewrite(),
+                Line("That dog was such a piece of shit. He loved my Mom, and everyone else was not to be trusted. But he especially hated me. I'll never figure that one out. Did I kick him at some point? Whatever."),
                     ("Cry", Effect.GoTo(nameof(SittingOnDogBed))),
                     ("Go to the kitchen.", Effect.GoTo(nameof(TakeOffBoots))),
                     ("Sit on the dog bed.", Effect.GoTo(nameof(SittingOnDogBed))),
@@ -265,14 +224,14 @@ namespace Game
         );
 
         public static Event OutTheWindow = new Event(nameof(OutTheWindow),
-               Line("Can't get out of this place fast enough.").Typewrite(),
+               Line("Can't get out of this place fast enough."),
                    ("Enter House", Effect.GoTo(nameof(Vestibule))),
                    ("Embrace the Apocalypse.", Effect.GoTo(nameof(Apocalypse)))
 
        );
 
         public static Event Apocalypse = new Event(nameof(Apocalypse),
-               Line("Your sickness overcomes you. The plague that conquered earth now conquers you. At least you are going out where it all started. This is the Way, I guess.").Typewrite(),
+               Line("Your sickness overcomes you. The plague that conquered earth now conquers you. At least you are going out where it all started. This is the Way, I guess."),
                    ("Restart", Effect.GoTo(nameof(Vestibule)))
 
        );

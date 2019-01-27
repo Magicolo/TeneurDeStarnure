@@ -41,16 +41,23 @@
     }
 
     async function ShowStyledNode(node, cssProperty) {
-      $(".current").append("<span style=\"" + cssProperty + ":" + node.Value + "\">");
-      await ShowNodeChildren(node.Children);
-      $(".current").append("<\span>");
+      $(".current")
+        .removeClass("current")
+        .append("<span style=\"" + cssProperty + ":" + node.Value + "\">")
+        .children(":last")
+        .addClass("current");
+      await ShowNodeChildren(node);
+      $(".current")
+        .removeClass("current")
+        .parent()
+        .addClass("current");
     }
 
     async function ShowNode(node) {
       switch (node.Type) {
 
         case "Color":
-          ShowStyledNode(node, "font-style");
+          ShowStyledNode(node, "color");
           break;
         case "Style":
           ShowStyledNode(node, "font-style");
@@ -96,7 +103,7 @@
           dataType: "jsonp",
           success: async function (data) {
             console.log(data);
-			eventId = "";
+            eventId = "";
           }
         });
       });
@@ -145,7 +152,7 @@
               .append("<div class=\"current well\"></div>");
 
             await ShowNode(data.Content.Script);
-			await sleep(2000);
+            await sleep(1000);
             await ShowChoices(data.Content.Choices);
             $(".current").animate({
               scrollTop: $(".current").height() + 1000 - $(".current").height()
