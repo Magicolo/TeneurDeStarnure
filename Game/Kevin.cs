@@ -90,7 +90,7 @@ namespace Game
 		{
 			if (State.Event == null) return Failures.CurrentEventNotFound;
 
-			if(globalId != (State.Counter + ""))
+			if (globalId != (State.Counter + ""))
 				return Failures.InvalidChoice;
 
 			var choice = State.Event.Choices.FirstOrDefault(current => current.Identifier == choiceId);
@@ -124,6 +124,6 @@ namespace Game
 
 			return (Failures.PlayerNotFound, State, new Player());
 		}
-		public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
+		public static Result GetTestContent() => Failures.CurrentEventNotFound;//Story.ApproachThePyramid.ToSuccess();
 	}
 }

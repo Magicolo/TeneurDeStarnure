@@ -61,9 +61,14 @@ namespace Game
 				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom == 2,
 				null
 			),
+			new Choice("Go to the vestibule.",
+				Line("You feel compelled to go back to the vestibule."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.HasBoots,
+				Effect.GoTo(nameof(Vestibule))
+			),
 			new Choice("Go to kitchen.",
 				Line("Perhaps it is time to make dinner. You go to the kitchen."),
-				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
+				(state, player) => player.Character.Identifier == Characters.Mom && !state.HasBoots && state.MomLivingRoom > 1 && state.DadStudy > 2,
 				Effect.GoTo(nameof(Kitchen))
 			),
 			new Choice("Tell Lau to shut up.",

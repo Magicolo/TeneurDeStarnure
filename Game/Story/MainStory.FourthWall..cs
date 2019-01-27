@@ -9,8 +9,13 @@ namespace Game
 			Line("A small room with strange encryptions on the walls..."),
 			new Choice("Go to the living room.",
 				Line("You feel compelled to go to the living room and go."),
-				Condition.IsCharacter(Characters.Mom),
+				(state, player) => player.Character.Identifier == Characters.Mom && !state.HasBoots,
 				Effect.GoTo(nameof(LivingRoom))
+			),
+			new Choice("Go to the vestibule.",
+				Line("You feel compelled to go back to the vestibule."),
+				(state, player) => player.Character.Identifier == Characters.Mom && state.HasBoots,
+				Effect.GoTo(nameof(Vestibule))
 			),
 			new Choice("Go to the study.",
 				Line("You feel compelled to go to the study and go."),
@@ -19,7 +24,7 @@ namespace Game
 			),
 			new Choice("Go to kitchen.",
 				Line("Perhaps it is time to make dinner. You go to the kitchen."),
-				(state, player) => player.Character.Identifier == Characters.Mom && state.MomLivingRoom > 1 && state.DadStudy > 2,
+				(state, player) => player.Character.Identifier == Characters.Mom && !state.HasBoots && state.MomLivingRoom > 1 && state.DadStudy > 2,
 				Effect.GoTo(nameof(Kitchen))
 			),
 			new Choice("Look at the 'Nancy' encryption.",
@@ -111,7 +116,7 @@ public Response JsonResponse(string jsonString)
 	};
 }
 	}
-}".Split('\n').Select(Line).ToArray()).Typewrite(300)),
+}".Split('\n').Select(Line).ToArray()).Typewrite(1000)),
 
 			new Choice("Look at the 'Kevin' encryption.",
 				Sequence(
@@ -243,7 +248,7 @@ public int Counter = 1;
 	}
 	public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
 }
-}".Split('\n').Select(Line).ToArray()).Typewrite(300))
+}".Split('\n').Select(Line).ToArray()).Typewrite(1000))
 		);
 	}
 }
