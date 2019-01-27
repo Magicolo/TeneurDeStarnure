@@ -19,40 +19,40 @@ namespace Game
 		{
 			new Character
 			{
-				Identifier = Game.Characters.Dad,
-				Name = "Dad",
-				Description = "A greedy curmudgeon. Prone to domestic violence.",
-				Objective = "Find more potatoes."
-			},
-			new Character
-			{
-				Identifier = Game.Characters.Dog,
-				Name = "Mino the dog",
-				Description = "Arf! Arf! Grr....",
-				Objective = "Hail to you."
-			},
-			new Character
-			{
 				Identifier = Game.Characters.Lau,
-				Name = "Lau",
-				Description = "The hero of our story. Left his home town to avoid his parents and found the Tao.",
-				Objective = "Make a friend."
+				Name = "What's left of Lau.",
+				Description = "Once an ordinary Canadian.",
+				Objective = "The Ice Wand whispers in my ear. I want it to stop! Please make it stop... End it even if it means ending me..."
 			},
+			new Character
+			{
+				Identifier = Game.Characters.Dad,
+				Name = "Spirit of Dad.",
+				Description = "Grumpy and stubborn. Loves Jeopardy.",
+				Objective = "Even though you raised him just fine, Lau went nuts and froze the world including myself! KILL the ungrateful boy!"
+			},
+			//new Character
+			//{
+			//	Identifier = Game.Characters.Dog,
+			//	Name = "Mino the dog",
+			//	Description = "Arf! Arf! Grr....",
+			//	Objective = "Hail to you."
+			//},
 			new Character
 			{
 				Identifier = Game.Characters.Mom,
-				Name = "Mom",
-				Description = "A neurotic and particular woman. Loves her dog.",
-				Objective = "Find more potatoes."
+				Name = "Spirit of Mom.",
+				Description = "Neurotic and picky. Loves her dog Mino.",
+				Objective = "Your son Lau is responsible for transforming the world to a frozen wasteland. Put him out of his misery!"
 			},
-			new Character
-			{
-				Identifier = Game.Characters.Pal,
-				Name = "Pal",
-				Description = "Neighbour the same age as Lau. They were friends until Pal used knowledge about Lau to gain favour with bullies at school.",
-				Objective = "Rain."
-			},
-		}).ToDictionary(character => character.Identifier.ToString());
+			//new Character
+			//{
+			//	Identifier = Game.Characters.Pal,
+			//	Name = "Pal",
+			//	Description = "Neighbour the same age as Lau. They were friends until Pal used knowledge about Lau to gain favour with bullies at school.",
+			//	Objective = "Rain."
+			//},
+		}).ToDictionary(character => character.Name.ToString());
 		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
@@ -93,7 +93,7 @@ namespace Game
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
 				choice.Effect(State);
-				State.LastChoice = $"{player.Character.Name} has chosen {choice.Label}.";
+				State.LastChoice = $"{player.Character.Identifier} has chosen {choice.Label}.";
 				return State.LastChoice.ToSuccess();
 			}
 
