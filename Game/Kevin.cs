@@ -53,12 +53,12 @@ namespace Game
 				Objective = "Rain."
 			},
 		}).ToDictionary(character => character.Identifier.ToString());
-		public readonly Dictionary<string, Event> Events = typeof(DoggoEpisode).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+		public readonly Dictionary<string, Event> Events = typeof(MainStory).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			.Select(field => field.GetValue(null))
 			.OfType<Event>()
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
-		public Event Event = DoggoEpisode.Vestibule;
+		public Event Event = MainStory.Entry;
 	}
 
 	public static class Kevin
