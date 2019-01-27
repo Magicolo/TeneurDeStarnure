@@ -37,11 +37,7 @@ namespace Game
 				return JsonResponse(Kevin.GetCurrentEvent(request.Id));
 			};
 
-			Get["/user/{id}/getPlayer"] = value =>
-			{
-				var request = this.Bind<RequestObject>();
-				return JsonResponse(Kevin.GetPlayer(request.Id));
-			};
+			Get["/user/{id}/getPlayer"] = parameters => JsonResponse(Kevin.GetPlayer(parameters.Id));
 
 			Get["/user/{id}/getTestContent"] = value =>
 			{
@@ -70,6 +66,7 @@ namespace Game
 			{
 				StatusCode = HttpStatusCode.OK,
 				ContentType = "application/json",
+
 				//ReasonPhrase = "Because why not!",
 				Headers = new Dictionary<string, string>()
 				{
