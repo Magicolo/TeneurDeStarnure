@@ -210,17 +210,18 @@
               var newNode = "<p class=\"lastAction newLastChoice\">" + data.Content.LastChoice + "</p>";
               $(".current").append(newNode);
               $(".newLastChoice").hide().fadeIn(600);
-              await sleep(600);
+              await sleep(1000);
               $(".newLastChoice").removeClass("newLastChoice");
             }
 
             //Last Outcome
             if (HasContent(data.Content.LastOutcome)) {
-              var lastOutcome = "<p class=\"newLastOutcome\">" + data.Content.LastOutcome + "</p>";
-              $(".current").append(lastOutcome);
-              $(".newLastOutcome").hide().fadeIn(600);
-              await sleep(600);
-              $(".newLastOutcome").removeClass("newLastOutcome");
+				await ShowNode(data.Content.LastOutcome);
+              //var lastOutcome = "<p class=\"newLastOutcome\">" + data.Content.LastOutcome + "</p>";
+              //$(".current").append(lastOutcome);
+              //$(".newLastOutcome").hide().fadeIn(600);
+				await sleep(1000);
+              //$(".newLastOutcome").removeClass("newLastOutcome");
             }
 
             $(".current")

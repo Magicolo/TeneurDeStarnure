@@ -109,7 +109,13 @@ namespace Game
 
 		public static Result GetCharacters() => State.Characters.ToSuccess();
 		public static Result GetCurrentEventId(string playerId) => State.Event?.Identifier.ToSuccess() ?? Failures.CurrentEventNotFound;
-		public static Result GetCurrentEvent(string playerId) => State.Event?.ToSuccess() ?? Failures.CurrentEventNotFound;
+		public static (Result, State, Player) GetCurrentEvent(string playerId)
+		{
+			if (State.Players.TryGetValue(playerId, out var player))
+				return (State.Event?.ToSuccess() ?? Failures.CurrentEventNotFound, State, player);
+
+			return (Failures.PlayerNotFound, State, new Player());
+		}
 		public static Result GetTestContent() => Story.ApproachThePyramid.ToSuccess();
 	}
 }
