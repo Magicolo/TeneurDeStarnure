@@ -100,7 +100,7 @@ namespace Game
                     ("Go to the dog bed.", Condition.IsCharacter(Characters.Dog), Effect.GoTo(nameof(DogBed)))
 
         );
-        public static Event LivingRoomFromCouch = new Event(nameof(LivingRoomFromDogBed),
+        public static Event LivingRoomFromCouch = new Event(nameof(LivingRoomFromCouch),
                 Line("What else...?"),
                     ("Climb out the window.", Condition.IsCharacter(Characters.Pal), Effect.GoTo(nameof(TakeOffCoat))),
                     ("Go to the vestibule.", Effect.GoTo(nameof(Vestibule))),
@@ -196,7 +196,7 @@ namespace Game
 
         );
 
-        public static Event PhilosophizingOnDadsChair = new Event(nameof(CryingOnDadsChair),
+        public static Event PhilosophizingOnDadsChair = new Event(nameof(PhilosophizingOnDadsChair),
                 Line(@"""Behave simply and hold on to purity. Lessen selfishness and restrain desires. Abandon knowledge and your worries are over."" That is so the opposite of my dad. Oh, well."),
                     ("Meditate", Effect.GoTo(nameof(MeditatingOnDadsChair))),
                     ("Watch Jeopardy.", Condition.IsCharacter(Characters.Dad), Effect.GoTo(nameof(Jeopardy))),
