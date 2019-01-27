@@ -59,6 +59,7 @@ namespace Game
 			.ToDictionary(value => value.Identifier);
 		public readonly Dictionary<string, Player> Players = new Dictionary<string, Player>();
 		public Event Event = MainStory.Entry;
+		public string LastChoice;
 	}
 
 	public static class Kevin
@@ -92,7 +93,8 @@ namespace Game
 			if (State.Players.TryGetValue(playerId, out var player))
 			{
 				choice.Effect(State);
-				return $"{player.Character.Name} has chosen {choice.Label}.".ToSuccess();
+				State.LastChoice = $"{player.Character.Name} has chosen {choice.Label}.";
+				return State.LastChoice.ToSuccess();
 			}
 
 			return Failures.PlayerNotFound;

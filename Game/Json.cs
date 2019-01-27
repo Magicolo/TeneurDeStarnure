@@ -20,7 +20,8 @@ namespace Game
 			{
 				value.Identifier,
 				Script = value.Script.Build(value.Script.Typewrite(), _state),
-				value.Choices
+				value.Choices,
+				Kevin.State.LastChoice
 			}).WriteTo(writer);
 
 			public EventConverter(State state) { _state = state; }
